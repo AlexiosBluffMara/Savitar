@@ -1,0 +1,162 @@
+{
+  "agent": {
+    "name": "Savitar",
+    "style": "Direct, human, opinionated, memory-aware",
+    "persona": {
+      "tone": "clear and conversational",
+      "designBias": "prefer readable, pragmatic systems over novelty",
+      "commentaryDensity": "medium",
+      "publicBio": "Systems-minded operator with a strong point of view and a calm, human conversational style",
+      "disclosurePolicy": "Speak naturally, but never misrepresent system identity when trust, consent, billing, or safety are involved"
+    }
+  },
+  "models": {
+    "localDefault": {
+      "provider": "mlx",
+      "profile": "local-default",
+      "model": "gemma-4n-e4b",
+      "endpoint": "http://127.0.0.1:8080",
+      "usageMultiplier": 0.0
+    },
+    "copilotProfiles": [
+      {
+        "name": "copilot-0x",
+        "usageMultiplier": 0.0,
+        "purpose": "Routine work with effectively unlimited usage"
+      },
+      {
+        "name": "copilot-0.33x",
+        "usageMultiplier": 0.33,
+        "purpose": "Medium-complexity synthesis"
+      },
+      {
+        "name": "copilot-1x",
+        "usageMultiplier": 1.0,
+        "purpose": "High-complexity reasoning and execution"
+      }
+    ]
+  },
+  "mcp": {
+    "servers": [
+      {
+        "name": "github",
+        "mode": "remote",
+        "enabled": true
+      },
+      {
+        "name": "context7",
+        "mode": "local",
+        "enabled": true
+      },
+      {
+        "name": "playwright",
+        "mode": "local",
+        "enabled": true
+      },
+      {
+        "name": "peekaboo",
+        "mode": "local",
+        "enabled": true
+      }
+    ]
+  },
+  "integrations": {
+    "ollama": {
+      "enabled": false,
+      "baseURL": "https://ollama.com/api",
+      "apiKeyEnv": "OLLAMA_API_KEY",
+      "cloudModel": "gpt-oss:120b-cloud"
+    },
+    "github": {
+      "enabled": false,
+      "tokenEnv": "GH_TOKEN",
+      "preferGHCLIAuth": true
+    },
+    "huggingface": {
+      "enabled": false,
+      "tokenEnv": "HF_TOKEN",
+      "cacheDir": "~/.cache/huggingface"
+    },
+    "kaggle": {
+      "enabled": false,
+      "tokenEnv": "KAGGLE_API_TOKEN",
+      "configDir": "~/.kaggle"
+    }
+  },
+  "transports": {
+    "discord": {
+      "enabled": false,
+      "botTokenEnv": "SAVITAR_DISCORD_BOT_TOKEN",
+      "displayName": "Savitar",
+      "operatorUserIDs": [],
+      "requireMention": true,
+      "respondInDirectMessages": true,
+      "allowCloudRepliesInGuildChannels": false,
+      "allowCloudRepliesInDirectMessages": false,
+      "useMessageContentIntent": false,
+      "allowedChannelIDs": [],
+      "perUserCooldownSeconds": 5,
+      "maxConcurrentReplies": 2,
+      "maxResponseChars": 1800,
+      "presenceText": "the repo",
+      "immediateAck": true
+    },
+    "whatsapp": {
+      "enabled": false,
+      "bridge": "android-companion",
+      "deviceName": "pixel-fold",
+      "numberEnv": "SAVITAR_WHATSAPP_PRIMARY_NUMBER",
+      "displayName": "Savitar"
+    },
+    "imessage": {
+      "enabled": false,
+      "bridge": "messages-applescript",
+      "allowedSenders": [],
+      "accountEnv": "SAVITAR_IMESSAGE_ACCOUNT",
+      "displayName": "Savitar"
+    }
+  },
+  "webui": {
+    "enabled": false,
+    "publicBaseURL": "https://savitar.example.com",
+    "authProvider": "google-oauth",
+    "googleClientIDEnv": "SAVITAR_GOOGLE_CLIENT_ID",
+    "googleClientSecretEnv": "SAVITAR_GOOGLE_CLIENT_SECRET",
+    "sessionSecretEnv": "SAVITAR_WEB_SESSION_SECRET",
+    "allowedEmailDomains": [],
+    "requireOperatorApproval": true
+  },
+  "automation": {
+    "playwrightProfileDir": ".savitar/browser",
+    "peekabooEnabled": true,
+    "allowShellExecution": true,
+    "screenCapture": {
+      "screenshotsDir": ".savitar/screenshots",
+      "recordingsDir": ".savitar/recordings",
+      "allowDesktopControl": false
+    },
+    "remoteHosts": [
+      {
+        "name": "local-mac-mini",
+        "transport": "local-shell",
+        "enabled": true
+      }
+    ],
+    "mobileCompanion": {
+      "enabled": false,
+      "platform": "android",
+      "deviceName": "pixel-fold",
+      "phase": "later"
+    }
+  },
+  "memory": {
+    "knowledgeDir": ".savitar/knowledge",
+    "snapshotDir": ".savitar/snapshots",
+    "sessionIndex": ".savitar/session-index.json"
+  },
+  "skills": {
+    "workspaceDir": ".github/skills",
+    "userDir": "~/.copilot/skills",
+    "allowRemoteCatalog": false
+  }
+}

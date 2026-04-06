@@ -1,0 +1,11 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "node ./scripts/hooks/guard_tool_use.mjs",
+        "timeout": 10
+      }
+    ]
+  }
+}
