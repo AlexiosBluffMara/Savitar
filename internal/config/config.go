@@ -108,23 +108,23 @@ type TransportsConfig struct {
 }
 
 type DiscordConfig struct {
-	Enabled                   bool     `json:"enabled"`
-	BotTokenEnv               string   `json:"botTokenEnv"`
-	DisplayName               string   `json:"displayName"`
-	OperatorUserIDs           []string `json:"operatorUserIDs"`
-	RequireMention            bool     `json:"requireMention"`
-	RespondInDirectMessages   bool     `json:"respondInDirectMessages"`
-	AllowCloudRepliesInGuilds bool     `json:"allowCloudRepliesInGuildChannels"`
-	AllowCloudRepliesInDMs    bool     `json:"allowCloudRepliesInDirectMessages"`
-	AllowLiveWebLookupInGuilds bool    `json:"allowLiveWebLookupInGuildChannels"`
-	AllowLiveWebLookupInDMs    bool    `json:"allowLiveWebLookupInDirectMessages"`
-	UseMessageContentIntent   bool     `json:"useMessageContentIntent"`
-	AllowedChannelIDs         []string `json:"allowedChannelIDs"`
-	PerUserCooldownSeconds    int      `json:"perUserCooldownSeconds"`
-	MaxConcurrentReplies      int      `json:"maxConcurrentReplies"`
-	MaxResponseChars          int      `json:"maxResponseChars"`
-	PresenceText              string   `json:"presenceText"`
-	ImmediateAck              bool     `json:"immediateAck"`
+	Enabled                    bool     `json:"enabled"`
+	BotTokenEnv                string   `json:"botTokenEnv"`
+	DisplayName                string   `json:"displayName"`
+	OperatorUserIDs            []string `json:"operatorUserIDs"`
+	RequireMention             bool     `json:"requireMention"`
+	RespondInDirectMessages    bool     `json:"respondInDirectMessages"`
+	AllowCloudRepliesInGuilds  bool     `json:"allowCloudRepliesInGuildChannels"`
+	AllowCloudRepliesInDMs     bool     `json:"allowCloudRepliesInDirectMessages"`
+	AllowLiveWebLookupInGuilds bool     `json:"allowLiveWebLookupInGuildChannels"`
+	AllowLiveWebLookupInDMs    bool     `json:"allowLiveWebLookupInDirectMessages"`
+	UseMessageContentIntent    bool     `json:"useMessageContentIntent"`
+	AllowedChannelIDs          []string `json:"allowedChannelIDs"`
+	PerUserCooldownSeconds     int      `json:"perUserCooldownSeconds"`
+	MaxConcurrentReplies       int      `json:"maxConcurrentReplies"`
+	MaxResponseChars           int      `json:"maxResponseChars"`
+	PresenceText               string   `json:"presenceText"`
+	ImmediateAck               bool     `json:"immediateAck"`
 }
 
 type WhatsAppConfig struct {
@@ -280,23 +280,23 @@ func Default() Config {
 		},
 		Transports: TransportsConfig{
 			Discord: DiscordConfig{
-				Enabled:                   false,
-				BotTokenEnv:               "SAVITAR_DISCORD_BOT_TOKEN",
-				DisplayName:               "Savitar",
-				OperatorUserIDs:           []string{},
-				RequireMention:            true,
-				RespondInDirectMessages:   true,
-				AllowCloudRepliesInGuilds: false,
-				AllowCloudRepliesInDMs:    false,
+				Enabled:                    false,
+				BotTokenEnv:                "SAVITAR_DISCORD_BOT_TOKEN",
+				DisplayName:                "Savitar",
+				OperatorUserIDs:            []string{},
+				RequireMention:             true,
+				RespondInDirectMessages:    true,
+				AllowCloudRepliesInGuilds:  false,
+				AllowCloudRepliesInDMs:     false,
 				AllowLiveWebLookupInGuilds: false,
 				AllowLiveWebLookupInDMs:    false,
-				UseMessageContentIntent:   false,
-				AllowedChannelIDs:         []string{},
-				PerUserCooldownSeconds:    5,
-				MaxConcurrentReplies:      2,
-				MaxResponseChars:          1800,
-				PresenceText:              "the repo",
-				ImmediateAck:              true,
+				UseMessageContentIntent:    false,
+				AllowedChannelIDs:          []string{},
+				PerUserCooldownSeconds:     5,
+				MaxConcurrentReplies:       2,
+				MaxResponseChars:           1800,
+				PresenceText:               "the repo",
+				ImmediateAck:               true,
 			},
 			WhatsApp: WhatsAppConfig{Enabled: false, Bridge: "android-companion", DeviceName: "pixel-fold", NumberEnv: "SAVITAR_WHATSAPP_PRIMARY_NUMBER", DisplayName: "Savitar"},
 			IMessage: IMessageConfig{Enabled: false, Bridge: "messages-applescript", AllowedSenders: []string{}, AccountEnv: "SAVITAR_IMESSAGE_ACCOUNT", DisplayName: "Savitar"},

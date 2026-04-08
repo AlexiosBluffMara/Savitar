@@ -14,9 +14,9 @@ import (
 )
 
 type Engine struct {
-	rt        *savitarruntime.Runtime
-	generator chat.Generator
-	history   *conversationHistory
+	rt         *savitarruntime.Runtime
+	generator  chat.Generator
+	history    *conversationHistory
 	repoSearch repoSearcher
 	liveLookup liveLookup
 }

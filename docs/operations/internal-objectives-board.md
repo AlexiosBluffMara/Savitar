@@ -4,101 +4,41 @@
 
 ## Repo Snapshot
 
-- Generated at: 2026-04-08 13:33:31Z
+- Generated at: 2026-04-08 13:33:39Z
 - Branch: main
-- HEAD: 0515cd2
-- HEAD subject: feat: add unit tests for memory store functionality
-- Staged paths: 38
-- Worktree paths: 38
+- HEAD: 01fc4c0
+- HEAD subject: Implement memory retrieval and operator service functionality
+- Staged paths: 7
+- Worktree paths: 7
 - Go source files: 50
 - Markdown docs: 38
 
 ## Staged Changes
 ```text
-M	.vscode/mcp.json
-M	README.md
-M	config/savitar.example.json
-A	docs/adr/0006-rewrite-product-direction.md
-A	docs/hackathon/README.md
-A	docs/hackathon/budget-tiers.md
-A	docs/hackathon/community-narrative.md
-A	docs/hackathon/demo-plan.md
-A	docs/hackathon/illinois-ecosystem.md
-A	docs/hackathon/research/illinois-grants-raw.md
-A	docs/hackathon/sessions/2026-04-07.md
-A	docs/hackathon/submission-strategy.md
-M	docs/operations/agent-team.md
-M	docs/operations/discord-bot.md
-A	docs/operations/internal-objectives-board.md
-A	docs/operations/internal-objectives-source.md
-A	docs/provenance/2026-04-08-local-markdown-rag-and-live-lookup.md
-M	docs/roadmap/0001-phase-plan.md
-M	docs/roadmap/0004-status-matrix.md
-A	docs/roadmap/0006-rewrite-blueprint.md
-M	internal/app/app.go
 M	internal/config/config.go
-M	internal/config/config_test.go
-M	internal/contracts/contracts.go
-A	internal/gateway/adapter.go
-A	internal/memory/markdown_repo.go
-A	internal/memory/markdown_repo_test.go
-A	internal/memory/retrieval.go
-M	internal/models/router.go
-A	internal/operator/service.go
-A	internal/orchestrator/program.go
+M	internal/memory/markdown_repo.go
+M	internal/memory/markdown_repo_test.go
 M	internal/respond/engine.go
-A	internal/respond/evidence.go
-A	internal/respond/evidence_test.go
+M	internal/respond/evidence.go
+M	internal/respond/evidence_test.go
 M	internal/runtime/runtime.go
-A	internal/webui/service.go
-A	scripts/hooks/pre-commit
-A	scripts/update-objectives-board.sh
 ```
 
 ## Worktree Status
 ```text
-M  .vscode/mcp.json
-M  README.md
-M  config/savitar.example.json
-A  docs/adr/0006-rewrite-product-direction.md
-A  docs/hackathon/README.md
-A  docs/hackathon/budget-tiers.md
-A  docs/hackathon/community-narrative.md
-A  docs/hackathon/demo-plan.md
-A  docs/hackathon/illinois-ecosystem.md
-A  docs/hackathon/research/illinois-grants-raw.md
-A  docs/hackathon/sessions/2026-04-07.md
-A  docs/hackathon/submission-strategy.md
-M  docs/operations/agent-team.md
-M  docs/operations/discord-bot.md
-AM docs/operations/internal-objectives-board.md
-A  docs/operations/internal-objectives-source.md
-A  docs/provenance/2026-04-08-local-markdown-rag-and-live-lookup.md
-M  docs/roadmap/0001-phase-plan.md
-M  docs/roadmap/0004-status-matrix.md
-A  docs/roadmap/0006-rewrite-blueprint.md
-M  internal/app/app.go
+ M docs/operations/internal-objectives-board.md
 M  internal/config/config.go
-M  internal/config/config_test.go
-M  internal/contracts/contracts.go
-A  internal/gateway/adapter.go
-A  internal/memory/markdown_repo.go
-A  internal/memory/markdown_repo_test.go
-A  internal/memory/retrieval.go
-M  internal/models/router.go
-A  internal/operator/service.go
-A  internal/orchestrator/program.go
+M  internal/memory/markdown_repo.go
+M  internal/memory/markdown_repo_test.go
 M  internal/respond/engine.go
-A  internal/respond/evidence.go
-A  internal/respond/evidence_test.go
+M  internal/respond/evidence.go
+M  internal/respond/evidence_test.go
 M  internal/runtime/runtime.go
-A  internal/webui/service.go
-A  scripts/hooks/pre-commit
-A  scripts/update-objectives-board.sh
 ```
 
 ## Recent Commits
 ```text
+01fc4c0 2026-04-08 Implement memory retrieval and operator service functionality
 0515cd2 2026-04-06 feat: add unit tests for memory store functionality
 a3606d9 2026-04-06 feat: implement runtime management and session handling
 6151eee 2026-04-06 Initial commit

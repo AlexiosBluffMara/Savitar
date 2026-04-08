@@ -44,25 +44,25 @@ type Status struct {
 }
 
 type DiscordStatus struct {
-	Enabled                   bool
-	TokenEnv                  string
-	TokenPresent              bool
-	DisplayName               string
-	OperatorUserCount         int
-	RequireMention            bool
-	RespondInDirectMessages   bool
-	AllowCloudRepliesInGuilds bool
-	AllowCloudRepliesInDMs    bool
+	Enabled                    bool
+	TokenEnv                   string
+	TokenPresent               bool
+	DisplayName                string
+	OperatorUserCount          int
+	RequireMention             bool
+	RespondInDirectMessages    bool
+	AllowCloudRepliesInGuilds  bool
+	AllowCloudRepliesInDMs     bool
 	AllowLiveWebLookupInGuilds bool
 	AllowLiveWebLookupInDMs    bool
-	UseMessageContentIntent   bool
-	AllowedChannelIDs         []string
-	PerUserCooldownSeconds    int
-	MaxConcurrentReplies      int
-	MaxResponseChars          int
-	PresenceText              string
-	ImmediateAck              bool
-	TriggerMode               string
+	UseMessageContentIntent    bool
+	AllowedChannelIDs          []string
+	PerUserCooldownSeconds     int
+	MaxConcurrentReplies       int
+	MaxResponseChars           int
+	PresenceText               string
+	ImmediateAck               bool
+	TriggerMode                string
 }
 
 type IntegrationStatus struct {
@@ -164,25 +164,25 @@ func (r *Runtime) DiscordStatus() DiscordStatus {
 	}
 
 	return DiscordStatus{
-		Enabled:                   cfg.Enabled,
-		TokenEnv:                  cfg.BotTokenEnv,
-		TokenPresent:              os.Getenv(cfg.BotTokenEnv) != "",
-		DisplayName:               cfg.DisplayName,
-		OperatorUserCount:         len(cfg.OperatorUserIDs),
-		RequireMention:            cfg.RequireMention,
-		RespondInDirectMessages:   cfg.RespondInDirectMessages,
-		AllowCloudRepliesInGuilds: cfg.AllowCloudRepliesInGuilds,
-		AllowCloudRepliesInDMs:    cfg.AllowCloudRepliesInDMs,
+		Enabled:                    cfg.Enabled,
+		TokenEnv:                   cfg.BotTokenEnv,
+		TokenPresent:               os.Getenv(cfg.BotTokenEnv) != "",
+		DisplayName:                cfg.DisplayName,
+		OperatorUserCount:          len(cfg.OperatorUserIDs),
+		RequireMention:             cfg.RequireMention,
+		RespondInDirectMessages:    cfg.RespondInDirectMessages,
+		AllowCloudRepliesInGuilds:  cfg.AllowCloudRepliesInGuilds,
+		AllowCloudRepliesInDMs:     cfg.AllowCloudRepliesInDMs,
 		AllowLiveWebLookupInGuilds: cfg.AllowLiveWebLookupInGuilds,
 		AllowLiveWebLookupInDMs:    cfg.AllowLiveWebLookupInDMs,
-		UseMessageContentIntent:   cfg.UseMessageContentIntent,
-		AllowedChannelIDs:         append([]string(nil), cfg.AllowedChannelIDs...),
-		PerUserCooldownSeconds:    cfg.PerUserCooldownSeconds,
-		MaxConcurrentReplies:      cfg.MaxConcurrentReplies,
-		MaxResponseChars:          cfg.MaxResponseChars,
-		PresenceText:              cfg.PresenceText,
-		ImmediateAck:              cfg.ImmediateAck,
-		TriggerMode:               triggerMode,
+		UseMessageContentIntent:    cfg.UseMessageContentIntent,
+		AllowedChannelIDs:          append([]string(nil), cfg.AllowedChannelIDs...),
+		PerUserCooldownSeconds:     cfg.PerUserCooldownSeconds,
+		MaxConcurrentReplies:       cfg.MaxConcurrentReplies,
+		MaxResponseChars:           cfg.MaxResponseChars,
+		PresenceText:               cfg.PresenceText,
+		ImmediateAck:               cfg.ImmediateAck,
+		TriggerMode:                triggerMode,
 	}
 }
 
