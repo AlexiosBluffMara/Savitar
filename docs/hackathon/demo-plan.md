@@ -1,173 +1,69 @@
 # Live Demo Plan
 
-This file captures the broader demo concept drafted before the rewrite reset.
+This file distinguishes the current shipped state from the public-facing submission target.
 
-The current target demo should be read through [docs/adr/0006-rewrite-product-direction.md](../adr/0006-rewrite-product-direction.md) and [docs/roadmap/0006-rewrite-blueprint.md](../roadmap/0006-rewrite-blueprint.md): one working Discord surface, a truthful knowledge workflow, and an authenticated operator console before later transport expansion.
+## Current shipped state
 
-## Architecture Overview
+- Discord reply path works locally.
+- The operator dashboard prototype works locally in demo mode.
+- Local markdown retrieval and evidence-style fallback exist.
+- Public authenticated web access is not finished yet.
 
-The live demo runs at a publicly accessible URL and shows judges a real, working Savitar instance connected to live messaging surfaces.
+The current repo can already support a truthful local demo video. The remaining work is turning that into a public judge-facing live demo without pretending unfinished auth and moderation flows already exist.
 
-```
-┌──────────────┐   ┌──────────────┐   ┌──────────────┐
-│   Discord     │   │   iMessage    │   │   WhatsApp    │
-│   (live)      │   │   (planned)   │   │   (planned)   │
-└──────┬───────┘   └──────┬───────┘   └──────┬───────┘
-       │                  │                  │
-       ▼                  ▼                  ▼
-┌─────────────────────────────────────────────────────┐
-│                  Savitar Gateway                     │
-│          Normalized Message Envelope                 │
-└──────────────────────┬──────────────────────────────┘
-                       │
-                       ▼
-┌─────────────────────────────────────────────────────┐
-│                  Reply Engine                        │
-│   Operator commands │ Memory packs │ Model routing   │
-└──────────────────────┬──────────────────────────────┘
-                       │
-          ┌────────────┼────────────┐
-          ▼            ▼            ▼
-   ┌────────────┐ ┌─────────┐ ┌────────────┐
-   │ Gemma 4    │ │ Gemma 4 │ │ Gemma 4    │
-   │ E4B (local)│ │ E2B     │ │ 31B (cloud)│
-   │ via Ollama │ │ (fast)  │ │ via Ollama │
-   └────────────┘ └─────────┘ └────────────┘
-                       │
-                       ▼
-┌─────────────────────────────────────────────────────┐
-│                    Web UI                            │
-│   Conversation view │ Model routing │ Memory packs   │
-│   Operator dashboard │ Session monitor               │
-│   (This is what judges see at the live demo URL)     │
-└─────────────────────────────────────────────────────┘
+## Submission target
+
+The target public demo should show one coherent system:
+
+```text
+Invite-only Discord
+  -> Savitar gateway
+  -> local Gemma 4 on Ollama
+  -> local markdown and document packs on SSD
+  -> operator dashboard with evidence and review state
 ```
 
----
+No part of the core inference story should depend on hosted-model fallback.
 
-## Demo Walkthrough for Judges (3 scenarios)
+## Judge scenarios
 
-### Scenario 1: Small Business Grant Discovery
+### Scenario 1: Chicago small-business operator
 
-**User context:** Maria, a Chicago small business owner, messages Savitar on Discord.
+- A business owner asks about a grant, filing step, or city resource.
+- Savitar answers from local evidence packs.
+- The dashboard shows the route, evidence, and operator visibility.
 
-```
-Maria: Hey, I just formed my LLC in Illinois. Are there any grants I can
-       apply for? I'm a Latina woman running a food truck on the South Side.
+### Scenario 2: Educator Live Mode
 
-Savitar: Great news — you're eligible for several programs:
+- An educator runs a moderated class or workshop channel.
+- Students ask questions against a local pack.
+- The educator sees what sources Savitar used and can intervene.
 
-1. **Neighborhood Opportunity Fund** — grants up to $250K for businesses
-   on Chicago's South Side corridors. Rolling deadline.
-2. **Comcast RISE** — $10K grant for women- or minority-owned businesses,
-   plus marketing support and free internet. Quarterly deadline.
-3. **Amber Grant for Women** — $10K monthly, $25K annual bonus. Open now.
-4. **We Rise Together** — up to $12,500 for storefront expansion.
+### Scenario 3: Safety and review
 
-Want me to pull up eligibility details for any of these?
-```
+- An answer triggers operator review or gets corrected.
+- The dashboard makes the review trail visible.
+- This demonstrates that Savitar is designed for oversight, not blind automation.
 
-**What the web UI shows:** The conversation in real-time, the memory packs that were accessed (illinois-grants, chicago-programs), the model used (gemma4:e4b local), and the response latency.
+## Public demo posture
 
-### Scenario 2: Academic Collaboration
+### What should be public
 
-**User context:** An ISU student messages on Discord.
+- The live demo URL.
+- A read-only or sanitized judge view.
+- The GitHub repository.
+- The short video.
 
-```
-Student: I'm doing a capstone project on community health data in
-         McLean County. Does ISU have any partnerships I could build on?
+### What should stay private
 
-Savitar: ISU's Center for Civic Engagement tracks community partnerships
-in the Collaboratory database. Relevant existing partnerships:
+- Real operator channels.
+- Sensitive knowledge packs.
+- Any personal or business data used during rehearsals.
 
-- **Chestnut Health Systems** — hosted ~90 ISU students in 2024,
-  focused on career development and community care
-- **Public health promotion** partners through the CCE network
+## Demo recording priorities
 
-For your capstone, I'd suggest contacting the CCE at (309) 438-1100
-or ceceserve@IllinoisState.edu to register your project in
-Collaboratory. That also makes you eligible for the Civic Engagement
-Champion Award.
-
-Want me to draft a project proposal template for your advisor?
-```
-
-### Scenario 3: Multi-Surface, Multi-Language
-
-**User context:** A community college ESL instructor uses WhatsApp to coordinate.
-
-```
-Instructor (WhatsApp): My student Ahmed needs help with his FAFSA
-                       application but his English is limited. Can you
-                       help him in Arabic?
-
-Savitar (WhatsApp): Of course. I'll switch to Arabic when talking with
-                    Ahmed. Have him message me directly or I can help
-                    translate your instructions.
-
-Ahmed (WhatsApp): مرحبا، أحتاج مساعدة في تقديم طلب المساعدة المالية
-
-Savitar (WhatsApp): مرحبا أحمد! سأساعدك في طلب FAFSA خطوة بخطوة.
-                    أولاً، هل لديك رقم FSA ID؟
-```
-
-**What the web UI shows:** Same unified dashboard, now showing conversations from multiple surfaces in multiple languages, all routed through the same Gemma 4 instance.
-
----
-
-## Demo URL Architecture
-
-### Minimum Viable Demo (for submission)
-
-```
-Mac Mini M4 (home network)
-├── Ollama (gemma4:e4b, gemma4:e2b)
-├── Savitar runtime (Go binary)
-├── Discord bot (live, connected)
-├── Web UI (Go HTTP server on :8080)
-└── Cloudflare Tunnel → public URL
-
-Pixel 9 Pro Fold (Google Fi, mobile companion)
-├── Web UI in Chrome (operator dashboard on 8" display)
-├── Discord app (see bot conversations live)
-├── WhatsApp (Fi number as Business endpoint)
-└── Future: Gemma 4 E2B via LiteRT (on-device)
-```
-
-**Cloudflare Tunnel** (free tier) exposes the web UI to a public URL without opening router ports. Judges visit `https://savitar-demo.example.com` and see the operator dashboard. No login required for read-only demo view (a special demo mode).
-
-The **Pixel Fold** is shown in the video as the mobile operator surface — unfold it and you see the same dashboard the judges see at the demo URL.
-
-### Enhanced Demo (with more transports)
-
-Same as above plus:
-- iMessage bridge (native macOS, no additional cost)
-- WhatsApp bridge (requires WhatsApp Business API or community bridge)
-
----
-
-## What Judges See at the Demo URL
-
-1. **Dashboard** — live conversation feed from all surfaces
-2. **Model routing panel** — which model handled which request, local vs cloud
-3. **Memory browser** — subject-area packs loaded, provenance metadata
-4. **Budget calculator** — interactive tier selector showing hardware cost vs capability (including Apple Education $499 pricing)
-5. **Architecture diagram** — the system map above, with live status indicators
-6. **Mobile view** — screenshot or live view from Pixel 9 Pro Fold showing the same dashboard on a mobile device
-
----
-
-## Technical Requirements for Demo
-
-| Component | Status | Needed By |
-|---|---|---|
-| Discord bot | Shipped | Now |
-| Web UI backend | Not started | Apr 20 |
-| Web UI frontend | Not started | Apr 20 |
-| Cloudflare Tunnel | Not started | Apr 27 |
-| Demo mode (read-only, no auth) | Not started | Apr 27 |
-| iMessage bridge | Contracted | May 4 |
-| WhatsApp bridge | Contracted | May 4 |
-| Memory packs loaded | Not started | Apr 13 |
-| Pixel Fold mobile dashboard | Not started | Apr 27 |
-| Google Fi WhatsApp number | Not started | May 4 |
+1. Show the human problem first.
+2. Show Discord as the working entry point.
+3. Show the dashboard as the operator proof surface.
+4. Show that Gemma 4 is local on the Mac Mini.
+5. End on why this matters for education, equity, and trust.

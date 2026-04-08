@@ -14,13 +14,13 @@ import (
 
 // Summary is the structured output of a repository analysis run.
 type Summary struct {
-	URL        string    `json:"url"`
-	CloneDir   string    `json:"cloneDir"`
-	CommitHash string    `json:"commitHash"`
-	Branch     string    `json:"branch"`
-	LogSnippet string    `json:"logSnippet"`
-	FileTree   string    `json:"fileTree"`
-	Stats      RepoStats `json:"stats"`
+	URL        string     `json:"url"`
+	CloneDir   string     `json:"cloneDir"`
+	CommitHash string     `json:"commitHash"`
+	Branch     string     `json:"branch"`
+	LogSnippet string     `json:"logSnippet"`
+	FileTree   string     `json:"fileTree"`
+	Stats      RepoStats  `json:"stats"`
 	Provenance Provenance `json:"provenance"`
 }
 
@@ -32,10 +32,10 @@ type RepoStats struct {
 
 // Provenance records who ran the analysis and when.
 type Provenance struct {
-	SourceURL   string `json:"sourceURL"`
-	CommitHash  string `json:"commitHash"`
-	AnalyzedAt  string `json:"analyzedAt"`
-	AnalyzedBy  string `json:"analyzedBy"`
+	SourceURL  string `json:"sourceURL"`
+	CommitHash string `json:"commitHash"`
+	AnalyzedAt string `json:"analyzedAt"`
+	AnalyzedBy string `json:"analyzedBy"`
 }
 
 // Analyzer runs git-backed repository analysis under a shell policy.

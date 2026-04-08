@@ -19,6 +19,7 @@ import (
 	"github.com/alexiosbluffmara/savitar/internal/respond"
 	savitarruntime "github.com/alexiosbluffmara/savitar/internal/runtime"
 	"github.com/alexiosbluffmara/savitar/internal/session"
+	"github.com/alexiosbluffmara/savitar/internal/webui"
 )
 
 func Run(stdout io.Writer, stderr io.Writer, version string, args []string) int {
@@ -74,6 +75,8 @@ func Run(stdout io.Writer, stderr io.Writer, version string, args []string) int 
 		return handleRepo(stdout, stderr, rt, args[1:])
 	case "memory":
 		return handleMemory(stdout, stderr, rt, args[1:])
+	case "webui":
+		return handleWebUI(stdout, stderr, rt, args[1:])
 	case "version":
 		fmt.Fprintln(stdout, version)
 		return 0
@@ -100,6 +103,7 @@ func printHelp(out io.Writer) {
 	fmt.Fprintln(out, "  savitar mcp [status]")
 	fmt.Fprintln(out, "  savitar repo analyze <url>")
 	fmt.Fprintln(out, "  savitar memory [list|show <subject> <name>|write <subject> <name> <body>|search <query>|graph <query>]")
+	fmt.Fprintln(out, "  savitar webui [serve --demo --addr :8080]")
 	fmt.Fprintln(out, "  savitar plan")
 	fmt.Fprintln(out, "  savitar contracts")
 	fmt.Fprintln(out, "  savitar models")
@@ -209,6 +213,9 @@ func printIntegrations(out io.Writer, rt *savitarruntime.Runtime) {
 	fmt.Fprintln(tw, "name\tenabled\tauth\tcredential\tenv\tcli\tdetails")
 	for _, status := range rt.IntegrationStatuses() {
 		credential := ternary(status.CredentialPresent, "ready", "missing")
+		if status.AuthSource == "local-http" || status.AuthSource == "none" {
+			credential = "n/a"
+		}
 		fmt.Fprintf(
 			tw,
 			"%s\t%t\t%s\t%s\t%s\t%s\t%s\n",
@@ -323,6 +330,44 @@ func handleDiscord(out io.Writer, errOut io.Writer, rt *savitarruntime.Runtime, 
 	}
 }
 
+func handleWebUI(out io.Writer, errOut io.Writer, rt *savitarruntime.Runtime, args []string) int {
+	action := "serve"
+	if len(args) > 0 && !strings.HasPrefix(args[0], "-") {
+		action = strings.ToLower(args[0])
+		args = args[1:]
+	}
+	if action != "serve" {
+		fmt.Fprintf(errOut, "unknown webui action %q\n", action)
+		fmt.Fprintln(errOut, "usage: savitar webui [serve --demo --addr :8080]")
+		return 1
+	}
+
+	demo := false
+	addr := ":8080"
+	for index := 0; index < len(args); index++ {
+		switch args[index] {
+		case "--demo":
+			demo = true
+		case "--addr":
+			if index+1 >= len(args) {
+				fmt.Fprintln(errOut, "usage: savitar webui [serve --demo --addr :8080]")
+				return 1
+			}
+			index++
+			addr = args[index]
+		default:
+			fmt.Fprintln(errOut, "usage: savitar webui [serve --demo --addr :8080]")
+			return 1
+		}
+	}
+	if !demo {
+		fmt.Fprintln(errOut, "web UI auth is not implemented yet; use savitar webui serve --demo for the local prototype")
+		return 1
+	}
+
+	return webui.RunDemo(out, errOut, rt, addr)
+}
+
 func printDiscordStatus(out io.Writer, rt *savitarruntime.Runtime) {
 	status := rt.DiscordStatus()
 	tw := tabwriter.NewWriter(out, 0, 0, 2, ' ', 0)
@@ -333,8 +378,6 @@ func printDiscordStatus(out io.Writer, rt *savitarruntime.Runtime) {
 	fmt.Fprintf(tw, "display name\t%s\n", blankIfEmpty(status.DisplayName))
 	fmt.Fprintf(tw, "operator users\t%d\n", status.OperatorUserCount)
 	fmt.Fprintf(tw, "trigger mode\t%s\n", status.TriggerMode)
-	fmt.Fprintf(tw, "cloud guild channels\t%t\n", status.AllowCloudRepliesInGuilds)
-	fmt.Fprintf(tw, "cloud DMs\t%t\n", status.AllowCloudRepliesInDMs)
 	fmt.Fprintf(tw, "live web guild channels\t%t\n", status.AllowLiveWebLookupInGuilds)
 	fmt.Fprintf(tw, "live web DMs\t%t\n", status.AllowLiveWebLookupInDMs)
 	fmt.Fprintf(tw, "message content intent\t%t\n", status.UseMessageContentIntent)
@@ -355,14 +398,9 @@ func printDiscordStatus(out io.Writer, rt *savitarruntime.Runtime) {
 	if !status.RequireMention && len(status.AllowedChannelIDs) == 0 {
 		fmt.Fprintln(out, "warning: disabling requireMention without allowedChannelIDs would capture all joined guild messages")
 	}
-	if status.RespondInDirectMessages && !status.AllowCloudRepliesInDMs {
-		fmt.Fprintln(out, "note: direct messages fail closed unless a local Ollama target is configured")
-	}
+	fmt.Fprintln(out, "note: conversational replies stay local-only and fail closed unless a local Ollama target is configured")
 	if status.RespondInDirectMessages && !status.AllowLiveWebLookupInDMs {
 		fmt.Fprintln(out, "note: direct-message live web lookup is disabled unless explicitly opted in locally")
-	}
-	if !status.AllowCloudRepliesInGuilds {
-		fmt.Fprintln(out, "note: guild messages fail closed unless a local Ollama target is configured")
 	}
 	if !status.AllowLiveWebLookupInGuilds {
 		fmt.Fprintln(out, "note: guild live web lookup is disabled unless explicitly opted in locally")

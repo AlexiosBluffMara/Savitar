@@ -128,12 +128,12 @@ Status key:
 
 | Feature | Status | Notes |
 | --- | --- | --- |
-| Public web UI backend | Not started | Contract defined (phase-3) |
+| Public web UI backend | Partial | Local demo backend and HTML dashboard exist; public auth and internet hardening are still pending |
 | Google OAuth session validation | Not started | |
-| Operator dashboard | Not started | |
-| Responsive mobile layout (Pixel Fold) | Not started | 8" inner display as primary mobile surface |
-| Budget calculator page | Not started | Interactive tier selector with Apple Education pricing |
-| Demo read-only mode | Not started | Public URL for hackathon judges |
+| Operator dashboard | Partial | Demo dashboard shows runtime status, model routing, knowledge sources, and integration readiness |
+| Responsive mobile layout (Pixel Fold) | Partial | Responsive card layout targets Fold-class widths; still needs live-device validation |
+| Budget calculator page | Partial | Budget-tier selector now ships inside the dashboard, including Apple Education pricing context |
+| Demo read-only mode | Partial | Local demo-mode dashboard exists; public judge access is still blocked on authenticated public mode |
 
 ---
 
@@ -168,9 +168,9 @@ Status key:
 | Strategy docs (submission, budget, community, ecosystem) | Shipped | Apr 7 | 7+ docs in docs/hackathon/ |
 | Memory packs (grants, ISU, Chicago) | Shipped | Apr 7 | 6 packs at ~/.savitar/memory/ |
 | MCP runtime client (Milestone 1) | Not started | Apr 13 | Required for tool use in demos |
-| Web UI v0 (operator dashboard) | Not started | Apr 13 | Needed for live demo |
+| Web UI v0 (operator dashboard) | Partial | Apr 13 | Prototype dashboard exists; public auth and richer operator data are still pending |
 | iMessage bridge prototype | Not started | Apr 20 | Contract defined |
-| Pixel Fold mobile dashboard | Not started | Apr 27 | Responsive web UI |
+| Pixel Fold mobile dashboard | Partial | Apr 27 | Responsive prototype exists; device validation still pending |
 | Google Fi WhatsApp setup | Not started | May 4 | Fi number as WhatsApp Business |
 | Demo video recording | Not started | May 11 | 5-minute walkthrough |
 | Kaggle notebook/submission | Not started | May 18 | Final deadline |

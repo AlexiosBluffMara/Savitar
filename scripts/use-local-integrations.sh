@@ -25,7 +25,6 @@ export_from_keychain() {
 	fi
 }
 
-export_from_keychain OLLAMA_API_KEY savitar/ollama-cloud/api-key
 export_from_keychain GH_TOKEN savitar/github/token
 export_from_keychain HF_TOKEN savitar/huggingface/token
 export_from_keychain KAGGLE_API_TOKEN savitar/kaggle/api-token

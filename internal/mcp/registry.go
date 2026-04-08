@@ -21,9 +21,9 @@ type ServerStatus struct {
 
 // Registry loads MCP server configs and can probe each server for status.
 type Registry struct {
-	rootDir   string
+	rootDir    string
 	savitarCfg []config.MCPServerConfig
-	vscode    []VSCodeServerConfig
+	vscode     []VSCodeServerConfig
 }
 
 // NewRegistry creates a Registry. Call Load to resolve server configs.
@@ -68,7 +68,7 @@ func (r *Registry) resolved() []mergedServer {
 	for _, s := range r.savitarCfg {
 		if !vscodeSeen[s.Name] {
 			out = append(out, mergedServer{
-				vscode: VSCodeServerConfig{Name: s.Name, Type: s.Mode},
+				vscode:  VSCodeServerConfig{Name: s.Name, Type: s.Mode},
 				enabled: s.Enabled,
 			})
 		}

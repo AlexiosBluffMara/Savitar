@@ -105,23 +105,27 @@ func (l *Logger) Info(msg string)  { l.write(LevelInfo, msg) }
 func (l *Logger) Warn(msg string)  { l.write(LevelWarn, msg) }
 func (l *Logger) Error(msg string) { l.write(LevelError, msg) }
 
-func (l *Logger) Debugf(format string, args ...any) { l.write(LevelDebug, fmt.Sprintf(format, args...)) }
-func (l *Logger) Infof(format string, args ...any)  { l.write(LevelInfo, fmt.Sprintf(format, args...)) }
-func (l *Logger) Warnf(format string, args ...any)  { l.write(LevelWarn, fmt.Sprintf(format, args...)) }
-func (l *Logger) Errorf(format string, args ...any) { l.write(LevelError, fmt.Sprintf(format, args...)) }
+func (l *Logger) Debugf(format string, args ...any) {
+	l.write(LevelDebug, fmt.Sprintf(format, args...))
+}
+func (l *Logger) Infof(format string, args ...any) { l.write(LevelInfo, fmt.Sprintf(format, args...)) }
+func (l *Logger) Warnf(format string, args ...any) { l.write(LevelWarn, fmt.Sprintf(format, args...)) }
+func (l *Logger) Errorf(format string, args ...any) {
+	l.write(LevelError, fmt.Sprintf(format, args...))
+}
 
 // Global logger helpers. These are thin wrappers around the global logger.
 func SetOutput(out io.Writer) { global.mu.Lock(); global.out = out; global.mu.Unlock() }
 func SetLevel(level Level)    { global.SetLevel(level) }
 
-func Debug(msg string)                   { global.Debug(msg) }
-func Info(msg string)                    { global.Info(msg) }
-func Warn(msg string)                    { global.Warn(msg) }
-func Error(msg string)                   { global.Error(msg) }
-func Debugf(format string, args ...any)  { global.Debugf(format, args...) }
-func Infof(format string, args ...any)   { global.Infof(format, args...) }
-func Warnf(format string, args ...any)   { global.Warnf(format, args...) }
-func Errorf(format string, args ...any)  { global.Errorf(format, args...) }
+func Debug(msg string)                  { global.Debug(msg) }
+func Info(msg string)                   { global.Info(msg) }
+func Warn(msg string)                   { global.Warn(msg) }
+func Error(msg string)                  { global.Error(msg) }
+func Debugf(format string, args ...any) { global.Debugf(format, args...) }
+func Infof(format string, args ...any)  { global.Infof(format, args...) }
+func Warnf(format string, args ...any)  { global.Warnf(format, args...) }
+func Errorf(format string, args ...any) { global.Errorf(format, args...) }
 
 // Writer returns an io.Writer that writes each line as an info-level log entry
 // with the given component. This adapts the Logger for use as an io.Writer

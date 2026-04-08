@@ -4,40 +4,109 @@
 
 ## Repo Snapshot
 
-- Generated at: 2026-04-08 13:33:39Z
-- Branch: main
-- HEAD: 01fc4c0
-- HEAD subject: Implement memory retrieval and operator service functionality
-- Staged paths: 7
-- Worktree paths: 7
-- Go source files: 50
-- Markdown docs: 38
+- Generated at: 2026-04-08 15:00:25Z
+- Branch: gemma4-good-hackathon
+- HEAD: 424f99e
+- HEAD subject: style: format code for consistency and readability across multiple files
+- Staged paths: 41
+- Worktree paths: 41
+- Go source files: 54
+- Markdown docs: 40
 
 ## Staged Changes
 ```text
+M	.github/workflows/ci.yml
+M	README.md
+M	config/savitar.example.json
+M	docs/hackathon/README.md
+M	docs/hackathon/budget-tiers.md
+M	docs/hackathon/community-narrative.md
+M	docs/hackathon/demo-plan.md
+M	docs/hackathon/submission-strategy.md
+M	docs/operations/discord-bot.md
+A	docs/operations/webui.md
+M	docs/provenance/2026-04-06-discord-conversational-replies.md
+M	docs/provenance/2026-04-06-provider-integrations.md
+A	docs/provenance/2026-04-08-gemma-4-good-rules-and-local-ollama-focus.md
+M	docs/roadmap/0004-status-matrix.md
+M	docs/setup/mac-mini.md
+M	docs/setup/provider-integrations.md
+M	internal/app/app.go
+M	internal/app/app_test.go
+M	internal/chat/chat.go
 M	internal/config/config.go
-M	internal/memory/markdown_repo.go
-M	internal/memory/markdown_repo_test.go
+M	internal/config/config_test.go
+M	internal/gateway/adapter.go
+M	internal/log/log.go
+M	internal/mcp/registry.go
+M	internal/memory/retrieval.go
+M	internal/ollama/chat.go
+M	internal/ollama/chat_test.go
+M	internal/operator/service.go
+M	internal/orchestrator/program.go
+M	internal/repo/analyze.go
 M	internal/respond/engine.go
-M	internal/respond/evidence.go
-M	internal/respond/evidence_test.go
 M	internal/runtime/runtime.go
+M	internal/runtime/runtime_test.go
+A	internal/webui/dashboard.go
+A	internal/webui/runtime_store.go
+M	internal/webui/service.go
+A	internal/webui/service_test.go
+A	internal/webui/template.go
+M	scripts/store-local-integrations.sh
+M	scripts/use-local-integrations.sh
+M	scripts/validate-local-integrations.sh
 ```
 
 ## Worktree Status
 ```text
+M  .github/workflows/ci.yml
+M  README.md
+M  config/savitar.example.json
+M  docs/hackathon/README.md
+M  docs/hackathon/budget-tiers.md
+M  docs/hackathon/community-narrative.md
+M  docs/hackathon/demo-plan.md
+M  docs/hackathon/submission-strategy.md
+M  docs/operations/discord-bot.md
  M docs/operations/internal-objectives-board.md
+A  docs/operations/webui.md
+M  docs/provenance/2026-04-06-discord-conversational-replies.md
+M  docs/provenance/2026-04-06-provider-integrations.md
+A  docs/provenance/2026-04-08-gemma-4-good-rules-and-local-ollama-focus.md
+M  docs/roadmap/0004-status-matrix.md
+M  docs/setup/mac-mini.md
+M  docs/setup/provider-integrations.md
+M  internal/app/app.go
+M  internal/app/app_test.go
+M  internal/chat/chat.go
 M  internal/config/config.go
-M  internal/memory/markdown_repo.go
-M  internal/memory/markdown_repo_test.go
+M  internal/config/config_test.go
+M  internal/gateway/adapter.go
+M  internal/log/log.go
+M  internal/mcp/registry.go
+M  internal/memory/retrieval.go
+M  internal/ollama/chat.go
+M  internal/ollama/chat_test.go
+M  internal/operator/service.go
+M  internal/orchestrator/program.go
+M  internal/repo/analyze.go
 M  internal/respond/engine.go
-M  internal/respond/evidence.go
-M  internal/respond/evidence_test.go
 M  internal/runtime/runtime.go
+M  internal/runtime/runtime_test.go
+A  internal/webui/dashboard.go
+A  internal/webui/runtime_store.go
+M  internal/webui/service.go
+A  internal/webui/service_test.go
+A  internal/webui/template.go
+M  scripts/store-local-integrations.sh
+M  scripts/use-local-integrations.sh
+M  scripts/validate-local-integrations.sh
 ```
 
 ## Recent Commits
 ```text
+424f99e 2026-04-08 style: format code for consistency and readability across multiple files
 01fc4c0 2026-04-08 Implement memory retrieval and operator service functionality
 0515cd2 2026-04-06 feat: add unit tests for memory store functionality
 a3606d9 2026-04-06 feat: implement runtime management and session handling

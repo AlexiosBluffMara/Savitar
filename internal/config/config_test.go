@@ -41,14 +41,6 @@ func TestLoadReturnsDefaultsWhenFileMissing(t *testing.T) {
 		t.Fatalf("unexpected default Discord concurrent reply limit: %d", loaded.Config.Transports.Discord.MaxConcurrentReplies)
 	}
 
-	if loaded.Config.Transports.Discord.AllowCloudRepliesInDMs {
-		t.Fatal("expected Discord cloud DMs to be disabled by default")
-	}
-
-	if loaded.Config.Transports.Discord.AllowCloudRepliesInGuilds {
-		t.Fatal("expected Discord cloud guild replies to be disabled by default")
-	}
-
 	if loaded.Config.Transports.Discord.AllowLiveWebLookupInDMs {
 		t.Fatal("expected Discord live web lookup in DMs to be disabled by default")
 	}
@@ -59,10 +51,6 @@ func TestLoadReturnsDefaultsWhenFileMissing(t *testing.T) {
 
 	if len(loaded.Config.Transports.Discord.OperatorUserIDs) != 0 {
 		t.Fatalf("expected default Discord operator user allowlist to be empty, got %d entries", len(loaded.Config.Transports.Discord.OperatorUserIDs))
-	}
-
-	if loaded.Config.Integrations.Ollama.APIKeyEnv != "OLLAMA_API_KEY" {
-		t.Fatalf("unexpected default Ollama API key env: %q", loaded.Config.Integrations.Ollama.APIKeyEnv)
 	}
 
 	if loaded.Config.Integrations.Kaggle.TokenEnv != "KAGGLE_API_TOKEN" {
@@ -116,6 +104,10 @@ func TestLoadOverridesDefaultsFromFile(t *testing.T) {
 
 	if loaded.Config.Models.LocalDefault.Model != "gemma4:e4b" {
 		t.Fatalf("expected default model to remain populated, got %q", loaded.Config.Models.LocalDefault.Model)
+	}
+
+	if loaded.Config.Models.LocalDefault.Endpoint != "http://127.0.0.1:11434" {
+		t.Fatalf("expected local Ollama endpoint to remain populated, got %q", loaded.Config.Models.LocalDefault.Endpoint)
 	}
 
 	if loaded.Config.Transports.IMessage.AccountEnv != "SAVITAR_IMESSAGE_ACCOUNT" {

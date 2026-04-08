@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	stdRuntime "runtime"
+	"strings"
 	"time"
 
 	"github.com/alexiosbluffmara/savitar/internal/config"
@@ -51,8 +52,6 @@ type DiscordStatus struct {
 	OperatorUserCount          int
 	RequireMention             bool
 	RespondInDirectMessages    bool
-	AllowCloudRepliesInGuilds  bool
-	AllowCloudRepliesInDMs     bool
 	AllowLiveWebLookupInGuilds bool
 	AllowLiveWebLookupInDMs    bool
 	UseMessageContentIntent    bool
@@ -171,8 +170,6 @@ func (r *Runtime) DiscordStatus() DiscordStatus {
 		OperatorUserCount:          len(cfg.OperatorUserIDs),
 		RequireMention:             cfg.RequireMention,
 		RespondInDirectMessages:    cfg.RespondInDirectMessages,
-		AllowCloudRepliesInGuilds:  cfg.AllowCloudRepliesInGuilds,
-		AllowCloudRepliesInDMs:     cfg.AllowCloudRepliesInDMs,
 		AllowLiveWebLookupInGuilds: cfg.AllowLiveWebLookupInGuilds,
 		AllowLiveWebLookupInDMs:    cfg.AllowLiveWebLookupInDMs,
 		UseMessageContentIntent:    cfg.UseMessageContentIntent,
@@ -188,15 +185,17 @@ func (r *Runtime) DiscordStatus() DiscordStatus {
 
 func (r *Runtime) IntegrationStatuses() []IntegrationStatus {
 	cfg := r.loaded.Config.Integrations
+	local := r.loaded.Config.Models.LocalDefault
+	ollamaEnabled := strings.EqualFold(strings.TrimSpace(local.Provider), "ollama")
 	return []IntegrationStatus{
 		{
 			Name:              "ollama",
-			Enabled:           cfg.Ollama.Enabled,
-			AuthSource:        "api-key-env",
-			CredentialPresent: envPresent(cfg.Ollama.APIKeyEnv),
-			TokenEnv:          cfg.Ollama.APIKeyEnv,
+			Enabled:           ollamaEnabled,
+			AuthSource:        "local-http",
+			CredentialPresent: false,
+			TokenEnv:          "",
 			CLIPath:           integrationCommandPath(r.rootDir, "ollama"),
-			Details:           fmt.Sprintf("%s model %s", cfg.Ollama.BaseURL, cfg.Ollama.CloudModel),
+			Details:           fmt.Sprintf("%s model %s", local.Endpoint, local.Model),
 		},
 		{
 			Name:              "github",
@@ -316,7 +315,6 @@ func (r *Runtime) Doctor() []Check {
 
 		switch status.Name {
 		case "ollama":
-			checks = append(checks, envCheck(status.TokenEnv, true))
 			checks = append(checks, commandCheck("ollama", true))
 		case "github":
 			checks = append(checks, githubCredentialCheck(r.loaded.Config.Integrations.GitHub))

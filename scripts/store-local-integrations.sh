@@ -16,7 +16,6 @@ store_secret() {
 	/usr/bin/security add-generic-password -U -a "$USER" -s "$service" -w
 }
 
-store_secret savitar/ollama-cloud/api-key "Ollama Cloud API key"
 store_secret savitar/github/token "GitHub token or PAT"
 store_secret savitar/huggingface/token "Hugging Face token"
 store_secret savitar/kaggle/api-token "Kaggle API token"

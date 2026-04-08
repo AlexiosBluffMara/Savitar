@@ -30,7 +30,7 @@ func TestRunHelpIncludesNewCommands(t *testing.T) {
 	}
 
 	output := stdout.String()
-	for _, command := range []string{"savitar status", "savitar agents", "savitar skills", "savitar integrations", "savitar gateway", "savitar persona", "savitar session [show|init|list]", "savitar discord [status|preview|run]", "savitar mcp [status]", "savitar repo analyze", "savitar memory [list"} {
+	for _, command := range []string{"savitar status", "savitar agents", "savitar skills", "savitar integrations", "savitar gateway", "savitar persona", "savitar session [show|init|list]", "savitar discord [status|preview|run]", "savitar mcp [status]", "savitar repo analyze", "savitar memory [list", "savitar webui [serve --demo --addr :8080]"} {
 		if !strings.Contains(output, command) {
 			t.Fatalf("expected help output to contain %q", command)
 		}
@@ -124,5 +124,30 @@ func TestRunIntegrationsReturnsProviderTable(t *testing.T) {
 		if !strings.Contains(output, provider) {
 			t.Fatalf("expected integrations output to contain %q, got %q", provider, output)
 		}
+	}
+}
+
+func TestRunWebUIServeRequiresDemoFlag(t *testing.T) {
+	tempDir := t.TempDir()
+	previousDir, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("Getwd returned error: %v", err)
+	}
+
+	if err := os.Chdir(tempDir); err != nil {
+		t.Fatalf("Chdir returned error: %v", err)
+	}
+	defer func() {
+		_ = os.Chdir(previousDir)
+	}()
+
+	stdout := &bytes.Buffer{}
+	stderr := &bytes.Buffer{}
+	exitCode := Run(stdout, stderr, "dev", []string{"webui", "serve"})
+	if exitCode == 0 {
+		t.Fatalf("expected non-zero exit code when demo flag is omitted")
+	}
+	if !strings.Contains(stderr.String(), "use savitar webui serve --demo") {
+		t.Fatalf("expected demo guidance in stderr, got %q", stderr.String())
 	}
 }

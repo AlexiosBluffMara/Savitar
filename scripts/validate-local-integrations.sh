@@ -19,6 +19,7 @@ PYTHON_BIN="/usr/bin/python3"
 HF_BIN="$(trusted_bin hf)"
 KAGGLE_BIN="$(trusted_bin kaggle)"
 GH_BIN="$(trusted_bin gh)"
+OLLAMA_BIN="$(trusted_bin ollama)"
 source "$SCRIPT_DIR/use-local-integrations.sh"
 
 if [[ ! -x "$PYTHON_BIN" ]]; then
@@ -41,23 +42,13 @@ if [[ -z "$GH_BIN" || ! -x "$GH_BIN" ]]; then
 	exit 1
 fi
 
-if [[ -n "${OLLAMA_API_KEY:-}" ]]; then
-	"$PYTHON_BIN" - <<'PY'
-import os
-import urllib.request
-
-request = urllib.request.Request(
-    "https://ollama.com/api/tags",
-    headers={"Authorization": f"Bearer {os.environ['OLLAMA_API_KEY']}"},
-)
-with urllib.request.urlopen(request, timeout=30) as response:
-    response.read(1)
-PY
-	echo "ollama: ok"
-else
-	echo "ollama: missing OLLAMA_API_KEY" >&2
+if [[ -z "$OLLAMA_BIN" || ! -x "$OLLAMA_BIN" ]]; then
+	echo "missing Ollama CLI" >&2
 	exit 1
 fi
+
+"$OLLAMA_BIN" list >/dev/null
+echo "ollama: ok"
 
 "$GH_BIN" auth status >/dev/null
 echo "github: ok"

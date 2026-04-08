@@ -26,9 +26,9 @@ This document defines the baseline Savitar workstation setup for macOS on Apple 
 
 ## Local model lane
 
-- Default target: an MLX-backed Gemma 4n E4B-class model.
-- Install the local model tooling with `uv` once the exact approved model artifact is chosen.
-- Keep the local model endpoint configurable through `config/savitar.local.json`.
+- Default target: local Gemma 4 on Ollama, with `gemma4:e4b-it-q8_0` as the main Mac Mini lane and `gemma4:e2b` as the lighter fallback.
+- Install Ollama on the host, pull the approved Gemma 4 tags locally, and keep the endpoint configurable through `config/savitar.local.json`.
+- Treat the Mac Mini as the inference box; background assistance can still come from GitHub Copilot lanes without changing the local inference story.
 
 ## macOS permissions
 
@@ -54,7 +54,7 @@ This document defines the baseline Savitar workstation setup for macOS on Apple 
 
 ## Provider integration notes
 
-- Ollama Cloud uses `OLLAMA_API_KEY` against `https://ollama.com/api`.
+- Ollama runs locally on the host and does not require a cloud token.
 - GitHub CLI prefers its own credential store, but Savitar also supports `GH_TOKEN` for explicit token-based use.
 - Hugging Face uses `HF_TOKEN`; keep it scoped to the smallest permission set that still works.
 - Kaggle's current official CLI supports `KAGGLE_API_TOKEN`, which can stay in the macOS Keychain and be exported only when needed.

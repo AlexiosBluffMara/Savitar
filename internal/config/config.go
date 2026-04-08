@@ -70,17 +70,9 @@ type MCPServerConfig struct {
 }
 
 type IntegrationsConfig struct {
-	Ollama      OllamaIntegrationConfig      `json:"ollama"`
 	GitHub      GitHubIntegrationConfig      `json:"github"`
 	HuggingFace HuggingFaceIntegrationConfig `json:"huggingface"`
 	Kaggle      KaggleIntegrationConfig      `json:"kaggle"`
-}
-
-type OllamaIntegrationConfig struct {
-	Enabled    bool   `json:"enabled"`
-	BaseURL    string `json:"baseURL"`
-	APIKeyEnv  string `json:"apiKeyEnv"`
-	CloudModel string `json:"cloudModel"`
 }
 
 type GitHubIntegrationConfig struct {
@@ -114,8 +106,6 @@ type DiscordConfig struct {
 	OperatorUserIDs            []string `json:"operatorUserIDs"`
 	RequireMention             bool     `json:"requireMention"`
 	RespondInDirectMessages    bool     `json:"respondInDirectMessages"`
-	AllowCloudRepliesInGuilds  bool     `json:"allowCloudRepliesInGuildChannels"`
-	AllowCloudRepliesInDMs     bool     `json:"allowCloudRepliesInDirectMessages"`
 	AllowLiveWebLookupInGuilds bool     `json:"allowLiveWebLookupInGuildChannels"`
 	AllowLiveWebLookupInDMs    bool     `json:"allowLiveWebLookupInDirectMessages"`
 	UseMessageContentIntent    bool     `json:"useMessageContentIntent"`
@@ -256,12 +246,6 @@ func Default() Config {
 			},
 		},
 		Integrations: IntegrationsConfig{
-			Ollama: OllamaIntegrationConfig{
-				Enabled:    false,
-				BaseURL:    "https://api.ollama.com",
-				APIKeyEnv:  "OLLAMA_API_KEY",
-				CloudModel: "gemma4:31b-cloud",
-			},
 			GitHub: GitHubIntegrationConfig{
 				Enabled:         false,
 				TokenEnv:        "GH_TOKEN",
@@ -286,8 +270,6 @@ func Default() Config {
 				OperatorUserIDs:            []string{},
 				RequireMention:             true,
 				RespondInDirectMessages:    true,
-				AllowCloudRepliesInGuilds:  false,
-				AllowCloudRepliesInDMs:     false,
 				AllowLiveWebLookupInGuilds: false,
 				AllowLiveWebLookupInDMs:    false,
 				UseMessageContentIntent:    false,

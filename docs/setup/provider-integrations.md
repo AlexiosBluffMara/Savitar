@@ -1,8 +1,8 @@
 # Provider Integrations
 
-Savitar now supports a local-only integration path for Ollama Cloud, GitHub, Hugging Face, Kaggle, and Discord.
+Savitar now supports a local-first integration path for local Ollama, GitHub, Hugging Face, Kaggle, and Discord.
 
-When Ollama integration is enabled, the Discord preview and live bot surfaces can use that same provider path for normal conversational replies. Guild channels and direct messages both fail closed unless a local Ollama target exists or you explicitly allow cloud replies for that channel type in local config.
+When the local Ollama lane is configured, the Discord preview and live bot surfaces use that same host for normal conversational replies. Guild channels and direct messages both fail closed unless a local Ollama target exists.
 
 These helper scripts are repo code. Review the checkout you are running before entering or exporting any live credentials.
 
@@ -26,7 +26,6 @@ These helper scripts are repo code. Review the checkout you are running before e
 
 ## Environment variables
 
-- Ollama Cloud: `OLLAMA_API_KEY`
 - GitHub: `GH_TOKEN` and `GITHUB_TOKEN`
 - Hugging Face: `HF_TOKEN`
 - Kaggle: `KAGGLE_API_TOKEN`
@@ -34,7 +33,6 @@ These helper scripts are repo code. Review the checkout you are running before e
 
 ## Keychain service names
 
-- `savitar/ollama-cloud/api-key`
 - `savitar/github/token`
 - `savitar/huggingface/token`
 - `savitar/kaggle/api-token`
@@ -44,9 +42,7 @@ These helper scripts are repo code. Review the checkout you are running before e
 
 The ignored local override at `config/savitar.local.json` enables these integration surfaces without storing any credential values. It relies on the environment variables loaded from the Keychain-backed shell helper.
 
-If you want guild channels to use Ollama Cloud instead of failing closed, set `transports.discord.allowCloudRepliesInGuildChannels` to `true` in your reviewed local config.
-
-If you want direct messages to use Ollama Cloud instead of failing closed, set `transports.discord.allowCloudRepliesInDirectMessages` to `true` in your reviewed local config.
+The local Ollama lane is configured through `models.localDefault` rather than `integrations`. Keep the provider set to `ollama`, the endpoint pointed at your local host, and the model tag aligned with what is actually pulled on the machine.
 
 ## Validation flow
 
@@ -63,5 +59,6 @@ If you want direct messages to use Ollama Cloud instead of failing closed, set `
 ## Security notes
 
 - Do not commit provider tokens, PATs, or bot tokens.
+- Do not store or expect any hosted Ollama token anywhere in this repo; Savitar now assumes local Ollama only.
 - Prefer the smallest usable scope for every token.
 - Keep token handling inside reviewed local shells, the macOS Keychain, and trusted provider CLIs.

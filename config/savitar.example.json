@@ -66,12 +66,6 @@
     ]
   },
   "integrations": {
-    "ollama": {
-      "enabled": false,
-      "baseURL": "https://api.ollama.com",
-      "apiKeyEnv": "OLLAMA_API_KEY",
-      "cloudModel": "gemma4:31b-cloud"
-    },
     "github": {
       "enabled": false,
       "tokenEnv": "GH_TOKEN",
@@ -96,8 +90,6 @@
       "operatorUserIDs": [],
       "requireMention": true,
       "respondInDirectMessages": true,
-      "allowCloudRepliesInGuildChannels": false,
-      "allowCloudRepliesInDirectMessages": false,
       "allowLiveWebLookupInGuildChannels": false,
       "allowLiveWebLookupInDirectMessages": false,
       "useMessageContentIntent": false,

@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
@@ -26,14 +25,12 @@ type ReplyGenerator struct {
 	httpClient httpClient
 	agent      config.AgentConfig
 	local      target
-	cloud      target
 }
 
 type target struct {
 	name    string
 	baseURL string
 	model   string
-	apiKey  string
 }
 
 type chatRequest struct {
@@ -61,15 +58,9 @@ func NewReplyGenerator(cfg config.Config) *ReplyGenerator {
 		httpClient: &http.Client{Timeout: 45 * time.Second},
 		agent:      cfg.Agent,
 		local: target{
-			name:    "local-default",
+			name:    "local-ollama",
 			baseURL: normalizeBaseURL(localBaseURL(cfg)),
 			model:   strings.TrimSpace(cfg.Models.LocalDefault.Model),
-		},
-		cloud: target{
-			name:    "ollama-cloud",
-			baseURL: normalizeBaseURL(cloudBaseURL(cfg)),
-			model:   strings.TrimSpace(cfg.Integrations.Ollama.CloudModel),
-			apiKey:  strings.TrimSpace(os.Getenv(cfg.Integrations.Ollama.APIKeyEnv)),
 		},
 	}
 }
@@ -78,56 +69,24 @@ func (g *ReplyGenerator) Available() bool {
 	if g == nil {
 		return false
 	}
-	return g.local.ready() || g.cloud.ready()
+	return g.local.ready()
 }
 
 func (g *ReplyGenerator) Generate(ctx context.Context, request chat.Request) (string, error) {
 	if !g.Available() {
-		return "", errors.New("no Ollama reply target is configured")
+		return "", errors.New("no local Ollama reply target is configured")
 	}
 
 	messages := g.messagesFor(request)
-	targets := g.targetsFor(request)
-	if len(targets) == 0 {
-		return "", errors.New("no Ollama reply target is available for this route")
+	reply, err := g.chat(ctx, g.local, messages)
+	if err != nil {
+		return "", fmt.Errorf("ollama reply failed: %s: %w", g.local.name, err)
 	}
-
-	errs := make([]string, 0, len(targets))
-	for _, target := range targets {
-		reply, err := g.chat(ctx, target, messages)
-		if err == nil {
-			reply = strings.TrimSpace(reply)
-			if reply != "" {
-				return reply, nil
-			}
-			err = errors.New("empty reply body")
-		}
-		errs = append(errs, fmt.Sprintf("%s: %v", target.name, err))
+	reply = strings.TrimSpace(reply)
+	if reply == "" {
+		return "", fmt.Errorf("ollama reply failed: %s: empty reply body", g.local.name)
 	}
-
-	return "", fmt.Errorf("ollama reply failed: %s", strings.Join(errs, "; "))
-}
-
-func (g *ReplyGenerator) targetsFor(request chat.Request) []target {
-	primaryLocal := request.Task.PrivateContext || request.Task.RequiresLocal || request.Route.Profile.Name == "local-default" || strings.EqualFold(request.Route.Profile.Provider, "ollama")
-	targets := make([]target, 0, 2)
-	if primaryLocal {
-		if g.local.ready() {
-			targets = append(targets, g.local)
-		}
-		if request.AllowCloudFallback && g.cloud.ready() {
-			targets = append(targets, g.cloud)
-		}
-		return targets
-	}
-
-	if g.local.ready() {
-		targets = append(targets, g.local)
-	}
-	if request.AllowCloudFallback && g.cloud.ready() {
-		targets = append(targets, g.cloud)
-	}
-	return targets
+	return reply, nil
 }
 
 func (g *ReplyGenerator) messagesFor(request chat.Request) []chatMessage {
@@ -224,9 +183,6 @@ func (g *ReplyGenerator) chat(ctx context.Context, target target, messages []cha
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", "savitar/0.1")
-	if target.apiKey != "" {
-		req.Header.Set("Authorization", "Bearer "+target.apiKey)
-	}
 
 	resp, err := g.httpClient.Do(req)
 	if err != nil {
@@ -266,16 +222,6 @@ func localBaseURL(cfg config.Config) string {
 		return ""
 	}
 	return cfg.Models.LocalDefault.Endpoint
-}
-
-func cloudBaseURL(cfg config.Config) string {
-	if !cfg.Integrations.Ollama.Enabled {
-		return ""
-	}
-	if strings.TrimSpace(os.Getenv(cfg.Integrations.Ollama.APIKeyEnv)) == "" {
-		return ""
-	}
-	return cfg.Integrations.Ollama.BaseURL
 }
 
 func normalizeBaseURL(raw string) string {

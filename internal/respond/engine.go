@@ -314,17 +314,16 @@ func (e Engine) modelReply(ctx context.Context, env gateway.Envelope, input stri
 	}
 	liveEvidence, _ := e.loadLiveEvidence(ctx, env, input)
 	request := chat.Request{
-		Surface:            string(env.Surface),
-		ConversationID:     key,
-		SenderDisplayName:  env.SenderDisplayName,
-		UserInput:          input,
-		History:            e.history.load(key),
-		Task:               task,
-		Route:              e.rt.Router().Route(task),
-		AllowCloudFallback: e.allowCloudFallback(env, task),
-		ReplyLimit:         e.replyLimit(env),
-		MemoryContext:      memoryContext,
-		ToolContexts:       liveEvidence,
+		Surface:           string(env.Surface),
+		ConversationID:    key,
+		SenderDisplayName: env.SenderDisplayName,
+		UserInput:         input,
+		History:           e.history.load(key),
+		Task:              task,
+		Route:             e.rt.Router().Route(task),
+		ReplyLimit:        e.replyLimit(env),
+		MemoryContext:     memoryContext,
+		ToolContexts:      liveEvidence,
 	}
 
 	reply, err := e.generator.Generate(ctx, request)
@@ -551,17 +550,6 @@ func newConversationHistory(maxMessages int) *conversationHistory {
 		maxMessages: maxMessages,
 		turns:       map[string][]chat.Turn{},
 	}
-}
-
-func (e Engine) allowCloudFallback(env gateway.Envelope, task models.Task) bool {
-	if env.Surface == gateway.SurfaceDiscord {
-		cfg := e.rt.Config().Config.Transports.Discord
-		if env.Metadata["dm"] == "true" {
-			return cfg.AllowCloudRepliesInDMs
-		}
-		return cfg.AllowCloudRepliesInGuilds
-	}
-	return !task.PrivateContext && !task.RequiresLocal
 }
 
 func (h *conversationHistory) load(key string) []chat.Turn {

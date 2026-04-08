@@ -18,23 +18,23 @@ var ErrNotImplemented = errors.New("orchestrator program method not implemented"
 // product-facing rather than transport-facing so the same intent model works in
 // Discord, the operator console, and later expansion surfaces.
 type Intent struct {
-	Name                string
-	SubjectHint         string
-	RequiresOperator    bool
+	Name                 string
+	SubjectHint          string
+	RequiresOperator     bool
 	RequiresLiveEvidence bool
-	RequiresReview      bool
+	RequiresReview       bool
 }
 
 // SessionState is the rewrite-oriented per-conversation state the orchestrator
 // needs while planning a turn. The existing session package can later become
 // one concrete implementation of this contract.
 type SessionState struct {
-	ConversationID     string
-	CurrentSurface     string
-	LastIntent         string
-	LastSubject        string
+	ConversationID      string
+	CurrentSurface      string
+	LastIntent          string
+	LastSubject         string
 	CurrentModelProfile string
-	UpdatedAt          time.Time
+	UpdatedAt           time.Time
 }
 
 // ToolCall is the normalized description of one live evidence request.
@@ -81,16 +81,16 @@ type ReplyDraft struct {
 
 // RunRecord is the durable explanation of what the orchestrator did.
 type RunRecord struct {
-	Surface         gateway.Surface
-	ConversationID  string
-	Intent          string
-	Subject         string
-	Route           models.Decision
-	ToolCalls       []ToolCall
-	References      []gateway.Reference
-	RequiresReview  bool
-	StartedAt       time.Time
-	CompletedAt     time.Time
+	Surface        gateway.Surface
+	ConversationID string
+	Intent         string
+	Subject        string
+	Route          models.Decision
+	ToolCalls      []ToolCall
+	References     []gateway.Reference
+	RequiresReview bool
+	StartedAt      time.Time
+	CompletedAt    time.Time
 }
 
 // Result is the complete output of one handled turn.

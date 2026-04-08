@@ -1,108 +1,175 @@
 # Submission Strategy — Gemma 4 Good Hackathon
 
-This document preserves the original broad submission framing.
+This document reflects the active hackathon strategy on the `gemma4-good-hackathon` branch.
 
-The active rewrite narrows the first complete product to Discord, curated knowledge, evidence-backed replies, and an authenticated operator console. See [docs/adr/0006-rewrite-product-direction.md](../adr/0006-rewrite-product-direction.md) and [docs/roadmap/0006-rewrite-blueprint.md](../roadmap/0006-rewrite-blueprint.md) for the current build direction.
-
-## Positioning
+## Core position
 
 **Project name:** Savitar  
-**Tagline:** A local-first, multi-surface AI agent for community knowledge, small business support, and academic collaboration — running Gemma 4 on Ollama.
+**Operator story:** Alexios Bluff Mara LLC runs a local-first Gemma 4 operator for Chicago small businesses, educators, and trusted community networks.  
+**Primary surfaces:** Invite-only Discord for end users, operator web console for review and oversight.  
+**Primary hardware:** Mac Mini M4 on bare metal with local Ollama, plus attached SSD for knowledge packs and run records.  
+**Stretch device:** Pixel Fold as the operator companion and possible Live Mode surface.
 
-**Duo submission:** AlexiosBluffMara with Illinois State University affiliation.
+Savitar should not be pitched as a generic multi-surface AI shell. For this competition, it should be pitched as a trustworthy local operator that helps people do real work without handing their conversations and local documents to a hosted model vendor.
 
-**Developer hardware:** Mac Mini M4 (16GB, server/inference), Google Pixel 9 Pro Fold (mobile companion, on Google Fi), Apple + Google ecosystem coverage.
+## Official competition requirements
 
----
+These points come directly from the official Kaggle overview and rules pages.
 
-## Target Tracks
+- One team can submit one writeup only.
+- Maximum team size is five.
+- The writeup must stay under 1,500 words.
+- The video must be public on YouTube and 3 minutes or less.
+- The code repository must be public.
+- The live demo must be publicly accessible and not require a paywall.
+- A media gallery and cover image are required.
+- Winners must be prepared to provide reproducible code and documentation.
+- External tools and data are allowed only when they are reasonably accessible at minimal cost.
 
-### Primary: Main Track ($50K / $25K / $15K / $10K)
+## How judging really works
 
-Savitar is a fully-functional, open-source Go runtime that routes conversations across Discord, WhatsApp, and iMessage through a unified gateway, backs them with Gemma 4 running locally on Ollama, and exposes everything through a clean web UI. It solves a real problem: community organizations, small businesses, and academic groups need private, affordable, and accessible AI — and they need it on *their* hardware, under *their* control.
+The public overview defines the scoring split:
 
-### Secondary: Ollama Special Technology Prize ($10K)
+- Impact & Vision: 40 points.
+- Video Pitch & Storytelling: 30 points.
+- Technical Depth & Execution: 30 points.
 
-Direct hit. The entire inference stack runs on Ollama. Local E4B and E2B for privacy-first work, cloud 31B for complex queries. The architecture specifically showcases how Ollama enables a production-grade agent with multi-model routing and cloud fallback.
+The host’s public welcome thread reinforces that the video is the judge’s primary lens. That means the project must be designed backward from the demo story, not forward from an architecture wish list.
 
-**Can win both Main + Ollama simultaneously.**
+## Award coverage strategy
 
-### Tertiary: LiteRT Special Technology Prize ($10K)
+### Main Track
 
-Future-path angle. The Pixel 9 Pro Fold running a fine-tuned Gemma 4 E2B model via LiteRT for on-device mobile inference. Not the primary submission, but the architecture explicitly plans for a mobile companion surface (Phase 6 in the roadmap). Demonstrating that the same Savitar gateway can route to an on-device LiteRT model on Android makes the technical depth story stronger even if the mobile path isn't fully built yet.
+Savitar is credible for the Main Track if the submission proves three things in one cohesive story:
 
-**Maximum possible: Main ($50K) + Ollama ($10K) + LiteRT ($10K) + Impact ($10K) = $80K**
+1. A real problem exists for Chicago operators, educators, and community-serving small businesses.
+2. Gemma 4 is central to the solution rather than bolted on.
+3. The code, dashboard, and Discord flow are functional enough to survive scrutiny.
 
-### Impact Tracks (pick up to 2):
+### Impact Track priorities
 
-| Track | Prize | Angle |
+The highest-value impact lanes for the current project shape are:
+
+| Track | Why Savitar fits |
+|---|---|
+| **Future of Education** | Educator Live Mode, role-gated classroom support, local course packs, and teacher-facing orchestration all map directly to the official education language around multi-tool agents that empower the educator. |
+| **Digital Equity & Inclusivity** | Chicago small businesses and multilingual learners benefit from local deployment, low hardware cost, file-and-link workflows, and interface choices that do not assume enterprise tooling. |
+| **Safety & Trust** | Invite-only Discord, operator review, provenance, explicit guardrails, evidence-backed answers, and local document control support a concrete trust story. |
+
+Health & Sciences and Global Resilience can remain adjacent narratives, but they should not dilute the main pitch unless a real demo scenario is built.
+
+### Special Technology Track priorities
+
+| Prize | Status | Rationale |
 |---|---|---|
-| **Digital Equity & Inclusivity** | $10K | Local-first AI for underserved Chicago communities and rural Illinois. Small business owners who can't afford API subscriptions get a private agent on a Mac Mini. Multilingual support through Gemma 4's native language capabilities. |
-| **Future of Education** | $10K | ISU partnership. Academic collaboration network with verified identity. Students and faculty use Savitar to access course knowledge, research resources, and community data through a shared, privacy-preserving agent. |
-| **Safety & Trust** | $10K | Clean-room architecture. Honest disclosure policy. Operator guardrails. Shell policy enforcement. No deceptive identity claims. Audit logs. |
+| **Ollama** | Direct target | Savitar now runs Gemma 4 locally through Ollama on the Mac Mini. This is the cleanest special-tech fit in the repo today. |
+| **Unsloth** | High-upside target | If a focused fine-tuned Gemma 4 adapter ships for educator or small-business workflows, Savitar becomes credible here too. |
+| **Cactus** | Stretch | Possible only if the mobile companion truthfully routes tasks between surfaces or models in a live demo. |
+| **LiteRT** | Stretch | Only pursue if an actual on-device Gemma flow exists. Do not pitch this as shipped before it exists. |
+| **llama.cpp** | Not the main bet | The local Mac Mini plus Ollama story is stronger and more coherent for this repo. |
 
-**Recommended primary impact angle: Digital Equity & Inclusivity** — it's the strongest story given the Chicago PoC small business connection and multiple budget tiers.
+The rules explicitly state that a project may win both a Main Track prize and a Special Technology prize. Public discussion has not yet clarified whether one entry can win multiple prizes inside the same track, so Savitar should maximize category overlap without promising same-track stacking.
 
----
+## Product story to tell
 
-## Evaluation Alignment
+Savitar is best framed as a neighborhood-scale operator system, not a chatbot.
 
-### Impact & Vision (40 pts)
+### Primary human story
 
-| Criterion | Our answer |
-|---|---|
-| Real-world problem | Small businesses, community orgs, and academic groups need AI they control, on hardware they own, at costs they can afford — without sending private data to cloud APIs |
-| Target users | Chicago PoC small business owners, ISU students and faculty, community college learners, rural Illinois nonprofits |
-| Scale potential | Savitar is open-source, runs on hardware from a $499 Apple Education Mac Mini to a $2,999 Mac Studio, and connects to messaging platforms people already use. Schools already get Apple Education discounts. |
-| Gemma 4 usage | Core model for all inference — E2B for budget hardware and mobile (LiteRT on Pixel), E4B for standard (Ollama on Mac Mini), 31B-cloud for peak demand |
-| Ecosystem breadth | Apple (Mac Mini + iMessage) and Google (Pixel Fold + Fi + Android + LiteRT) — covers both ecosystems from a single agent |
+Alexios Bluff Mara LLC operates a private Savitar instance for Chicago small-business owners and educators.
 
-### Video Pitch & Storytelling (30 pts)
+- A small-business owner uses Discord to ask about grants, forms, vendors, city programs, and operating checklists.
+- An educator uses the same system in Live Mode to coordinate lesson materials, answer student questions, and surface curated resources during live instruction.
+- The operator reviews outputs, curates local packs, and keeps sensitive material on local storage instead of hosted AI infrastructure.
 
-**3-minute video outline:**
-1. (0:00–0:30) — The problem: meet Maria, a Chicago small business owner. She needs help with LLC filings, grant applications, and customer questions. She can't afford $200/month API bills. She speaks Spanish at home.
-2. (0:30–1:15) — The solution: Savitar running on a $599 Mac Mini in Maria's back office. She messages Artemis on Discord. It answers in English and Spanish, pulls up grant deadlines, and helps draft applications — all local, all private.
-3. (1:15–1:45) — The architecture: show the web UI, the multi-surface gateway (Discord + WhatsApp + iMessage), the Gemma 4 model routing, the Ollama inference. Show it working live.
-4. (1:45–2:15) — Scale it: ISU students use the same system for research collaboration. A community college runs their own instance. Schools get the Mac Mini for $499 through Apple Education. Show the budget tiers from $0 to $3000. Quick flash of the Pixel Fold as the mobile operator companion.
-5. (2:15–2:45) — The "for good": why local-first matters for communities that can't trust cloud providers with their data. Why identity-verified channels build real networks. Why open-source means anyone can run this.
-6. (2:45–3:00) — Call to action and credits.
+### Why this story is stronger than the older one
 
-### Technical Depth & Execution (30 pts)
+- It avoids overcommitting to a specific university partnership before one exists.
+- It stays closer to your real operator context and your LLC.
+- It naturally covers education, digital equity, and trust in one product.
+- It keeps the submission focused on what can actually be shown in a 3-minute video.
 
-| Criterion | Our answer |
-|---|---|
-| Architecture | Clean Go runtime, contract-driven, 17 test packages, modular boundaries |
-| Model routing | Four-lane policy: local-default (E4B), fast (E2B), standard (cloud 31B), high-capability (cloud 31B) |
-| Ollama integration | Local inference on :11434, cloud fallback to api.ollama.com, health checks, per-model routing |
-| Multi-surface | Discord shipped, WhatsApp and iMessage contracted, unified gateway envelope |
-| Mobile companion | Pixel 9 Pro Fold on Google Fi as mobile operator surface. Future: on-device E2B via LiteRT for offline/private mobile inference |
-| MCP orchestration | 5 servers configured (GitHub, Context7, Tavily, Playwright, Peekaboo) |
-| Memory system | Filesystem-backed packs with provenance, subject tagging, temporal retrieval |
-| Web UI | Planned: operator dashboard with Google login, session view, conversation monitor |
-| Clean-room | Full provenance log, ADR charter, no copied code |
+## System pillars judges should see
 
----
+### 1. Local inference on hardware people can actually buy
 
-## Submission Deliverables Checklist
+- Gemma 4 on Ollama.
+- Mac Mini M4 as the standard deployment story.
+- Attached SSD for local knowledge packs, notes, course materials, and operating documents.
 
-| Deliverable | Status | Notes |
+### 2. Invite-only Discord with real operational controls
+
+- Role-based channels for small-business owners, educators, operators, and reviewers.
+- File, link, and short video workflows instead of prompt-only interaction.
+- Clear distinction between end-user channels and operator channels.
+
+### 3. Evidence-backed answers instead of empty assistant theater
+
+- Local markdown retrieval.
+- Source metadata.
+- Operator review queue.
+- Honest fallback behavior when the model or evidence is insufficient.
+
+### 4. Educator Live Mode
+
+This should be the simplest educational story:
+
+- one operator starts a live session,
+- one subject pack is active,
+- questions come in through a dedicated Discord channel,
+- the dashboard shows what evidence was used,
+- the educator can intervene, pin, or reject an answer.
+
+That is much easier to demo than a broad “education platform,” and it directly serves the official Future of Education framing.
+
+### 5. GitHub and Copilot as background leverage
+
+Use GitHub and Copilot to strengthen the operator story rather than replace the local model story.
+
+- GitHub stores the open code and issue flow.
+- Copilot helps maintain documentation, research summaries, and implementation throughput.
+- The local Gemma lane remains the actual submission centerpiece for end-user interaction.
+
+## Demo narrative for the 3-minute video
+
+### Segment 1: the problem
+
+Chicago operators, teachers, and small-business owners need an AI system that can work with local documents, invite-only communities, and real oversight. They cannot rely on a black-box hosted assistant for every question.
+
+### Segment 2: the system
+
+Show Savitar on a Mac Mini running Gemma 4 locally through Ollama, with Discord as the working user surface and the web console as the operator surface.
+
+### Segment 3: two concrete workflows
+
+- Small-business workflow: grant or program discovery with local evidence.
+- Educator workflow: Live Mode with local class materials and operator review.
+
+### Segment 4: why this matters
+
+- Lower hardware cost.
+- Local control.
+- Better trust posture.
+- Useful in real community settings.
+
+### Segment 5: technical credibility
+
+Show the repo, the dashboard, the local model route, and the evidence trail.
+
+## Deliverables checklist
+
+| Deliverable | Requirement | Savitar guidance |
 |---|---|---|
-| Kaggle Writeup (≤1500 words) | Not started | Draft from this strategy doc |
-| YouTube Video (≤3 min) | Not started | Script outlined above |
-| Public code repo | Ready | github.com/AlexiosBluffMara/Savitar |
-| Live demo URL | Not started | Need web UI endpoint |
-| Cover image | Not started | |
-| Media gallery | Not started | Screenshots of Discord, web UI, terminal |
+| Writeup | Public, under 1,500 words | Focus on one coherent story and one truthful architecture |
+| Video | Public YouTube, 3 minutes or less | Prioritize real workflows and human impact over feature inventory |
+| Code | Public repository | Keep the local-Ollama and Discord flow easy to inspect |
+| Live demo | Publicly accessible | Expose a truthful demo surface, likely read-only for judges |
+| Media gallery | Required | Screenshots of Discord, dashboard, evidence view, and local deployment |
 
----
+## Immediate build priorities
 
-## Timeline to May 18
-
-| Week | Focus |
-|---|---|
-| **Apr 7–13** | MCP runtime client (Milestone 1), memory packs for ISU/grant knowledge |
-| **Apr 14–20** | Web UI backend + minimal frontend, WhatsApp bridge contract |
-| **Apr 21–27** | iMessage bridge contract, budget-tier deployment docs, demo polish |
-| **Apr 28–May 4** | Record video, write Kaggle writeup, create media gallery |
-| **May 5–11** | Live demo hosted, submission draft review |
-| **May 12–18** | Final submission, buffer for fixes |
+1. Keep stripping cloud-only assumptions from the repo and docs.
+2. Strengthen the local Ollama route and prove it in the dashboard and Discord flows.
+3. Refine the operator dashboard around evidence, review, and Live Mode.
+4. Prepare a single disciplined Unsloth fine-tune plan instead of vague “later” language.
+5. Tighten the public demo story so it matches the official scoring weights.

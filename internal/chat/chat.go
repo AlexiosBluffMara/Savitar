@@ -19,17 +19,16 @@ type ToolContext struct {
 }
 
 type Request struct {
-	Surface            string
-	ConversationID     string
-	SenderDisplayName  string
-	UserInput          string
-	History            []Turn
-	Task               models.Task
-	Route              models.Decision
-	AllowCloudFallback bool
-	ReplyLimit         int
-	ToolContexts       []ToolContext // pre-fetched tool results
-	MemoryContext      []string     // loaded memory pack bodies
+	Surface           string
+	ConversationID    string
+	SenderDisplayName string
+	UserInput         string
+	History           []Turn
+	Task              models.Task
+	Route             models.Decision
+	ReplyLimit        int
+	ToolContexts      []ToolContext // pre-fetched tool results
+	MemoryContext     []string      // loaded memory pack bodies
 }
 
 type Generator interface {
