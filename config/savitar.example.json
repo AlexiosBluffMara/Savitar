@@ -12,10 +12,10 @@
   },
   "models": {
     "localDefault": {
-      "provider": "mlx",
+      "provider": "ollama",
       "profile": "local-default",
-      "model": "gemma-4n-e4b",
-      "endpoint": "http://127.0.0.1:8080",
+      "model": "gemma4:e4b",
+      "endpoint": "http://127.0.0.1:11434",
       "usageMultiplier": 0.0
     },
     "copilotProfiles": [
@@ -49,6 +49,11 @@
         "enabled": true
       },
       {
+        "name": "tavily",
+        "mode": "local",
+        "enabled": true
+      },
+      {
         "name": "playwright",
         "mode": "local",
         "enabled": true
@@ -63,9 +68,9 @@
   "integrations": {
     "ollama": {
       "enabled": false,
-      "baseURL": "https://ollama.com/api",
+      "baseURL": "https://api.ollama.com",
       "apiKeyEnv": "OLLAMA_API_KEY",
-      "cloudModel": "gpt-oss:120b-cloud"
+      "cloudModel": "gemma4:31b-cloud"
     },
     "github": {
       "enabled": false,
@@ -93,6 +98,8 @@
       "respondInDirectMessages": true,
       "allowCloudRepliesInGuildChannels": false,
       "allowCloudRepliesInDirectMessages": false,
+      "allowLiveWebLookupInGuildChannels": false,
+      "allowLiveWebLookupInDirectMessages": false,
       "useMessageContentIntent": false,
       "allowedChannelIDs": [],
       "perUserCooldownSeconds": 5,
@@ -153,6 +160,25 @@
     "knowledgeDir": ".savitar/knowledge",
     "snapshotDir": ".savitar/snapshots",
     "sessionIndex": ".savitar/session-index.json"
+  },
+  "knowledge": {
+    "catalogDir": ".savitar/knowledge-catalog",
+    "indexDir": ".savitar/knowledge-index",
+    "maxPacksPerReply": 3,
+    "maxExcerptsPerReply": 6,
+    "requireSourceMetadata": true,
+    "repoMarkdownDirs": ["README.md", "docs/adr", "docs/roadmap", "docs/hackathon"],
+    "maxRepoResults": 3,
+    "maxGraphEdges": 6,
+    "enableLiveWebLookup": true,
+    "liveWebProvider": "duckduckgo-json",
+    "webLookupTimeoutSeconds": 8
+  },
+  "operator": {
+    "reviewQueueDir": ".savitar/reviews",
+    "runLogDir": ".savitar/runs",
+    "approvedEmails": [],
+    "requireReviewForToolErrors": true
   },
   "skills": {
     "workspaceDir": ".github/skills",

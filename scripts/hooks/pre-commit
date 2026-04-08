@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+
+"$ROOT_DIR/scripts/update-objectives-board.sh"
+git -C "$ROOT_DIR" add docs/operations/internal-objectives-board.md

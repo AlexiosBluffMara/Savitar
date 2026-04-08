@@ -1,0 +1,49 @@
+# Internal Objectives Source
+
+This file is the curated source for the generated internal objectives board.
+
+Update this file when the product direction, active objectives, or codebase understanding changes.
+The generated board at `docs/operations/internal-objectives-board.md` is rebuilt from this file plus live git state.
+
+## Product Direction
+
+- Keep the first coherent product narrow: Discord, evidence-backed replies, curated knowledge, and an authenticated operator console.
+- Treat the current direct reply path in `internal/respond` plus `internal/discord` as the working prototype lane until the orchestrator replaces it.
+- Preserve local-first Gemma 4 routing and keep cloud access explicit, reviewable, and easy to disable.
+
+## Current Reality
+
+- The repo has a working Discord transport, grounded reply fallback, markdown-first repository retrieval, and a compact local repo graph.
+- Live web evidence works in preview through the current direct reply engine, but Discord live lookup is intentionally opt-in by surface.
+- Rewrite scaffolding exists in `internal/orchestrator`, `internal/operator`, and `internal/webui`, but those packages are still structural rather than operational.
+- The active local prototype is more complete than the operator-console path and should stay the benchmark while the rewrite catches up.
+
+## Near-Term Objectives
+
+1. Prove the real Discord path end to end in DM and an allowlisted guild channel with the current evidence-backed reply flow.
+2. Replace the direct public web fallback with MCP-backed live evidence and run logging.
+3. Persist run records and session continuity so the operator surface has real state to inspect.
+4. Build the first authenticated operator backend routes on top of stored runs, reviews, and knowledge metadata.
+5. Keep retrieval quality high by refining markdown ranking before adding heavier indexing systems.
+
+## Guardrails
+
+- Never commit live secrets, tokens, phone numbers, account emails, or bot identifiers.
+- Keep public-surface behavior honest: only claim live surfaces and tooling that the repo can actually run.
+- Prefer reviewable config and small explicit boundaries over hidden automation.
+- Treat `.github` instructions and internal operator material as non-public retrieval sources unless explicitly approved.
+
+## Codebase Insights
+
+- `internal/respond/engine.go` is still the fastest path for shipping prototype behavior.
+- `internal/memory/markdown_repo.go` is the current local-RAG core; it should stay readable and embeddings-free until lexical search becomes a real blocker.
+- `config/savitar.local.json` is already the operator override surface for integrations and Discord behavior.
+- `scripts/store-local-integrations.sh` and `scripts/use-local-integrations.sh` are the correct local-only secret path and should remain the default operator flow.
+- `docs/adr/0006-rewrite-product-direction.md` and `docs/roadmap/0006-rewrite-blueprint.md` are the active planning baseline; older broad-scope docs are context, not truth.
+
+## Validation Discipline
+
+- Keep `go test ./...` green after runtime or config changes.
+- Re-run `go run ./cmd/savitar discord status` after changing Discord config defaults or token wiring.
+- Use `go run ./cmd/savitar discord preview "<message>"` to validate evidence composition before live transport tests.
+- Prefer focused tests for runtime logic and treat live Discord runs as separate operator validation.

@@ -17,6 +17,8 @@ type Engine struct {
 	rt        *savitarruntime.Runtime
 	generator chat.Generator
 	history   *conversationHistory
+	repoSearch repoSearcher
+	liveLookup liveLookup
 }
 
 func NewEngine(rt *savitarruntime.Runtime) Engine {
@@ -31,11 +33,14 @@ func NewEngine(rt *savitarruntime.Runtime) Engine {
 }
 
 func NewEngineWithGenerator(rt *savitarruntime.Runtime, generator chat.Generator) Engine {
-	return Engine{
-		rt:        rt,
-		generator: generator,
-		history:   newConversationHistory(8),
+	engine := Engine{
+		rt:         rt,
+		generator:  generator,
+		history:    newConversationHistory(8),
+		repoSearch: markdownRepoSearcher{rt: rt},
+		liveLookup: newLiveLookup(rt),
 	}
+	return engine
 }
 
 func (e Engine) Reply(ctx context.Context, env gateway.Envelope) (string, error) {
@@ -302,6 +307,12 @@ func (e Engine) modelReply(ctx context.Context, env gateway.Envelope, input stri
 
 	key := conversationKey(env)
 	task := inferTask(input, env)
+	memoryContext := e.loadMemoryContext(input)
+	repoEvidence, _ := e.loadRepoEvidence(ctx, input)
+	if repoEvidence.Context != "" {
+		memoryContext = append(memoryContext, repoEvidence.Context)
+	}
+	liveEvidence, _ := e.loadLiveEvidence(ctx, env, input)
 	request := chat.Request{
 		Surface:            string(env.Surface),
 		ConversationID:     key,
@@ -312,11 +323,16 @@ func (e Engine) modelReply(ctx context.Context, env gateway.Envelope, input stri
 		Route:              e.rt.Router().Route(task),
 		AllowCloudFallback: e.allowCloudFallback(env, task),
 		ReplyLimit:         e.replyLimit(env),
-		MemoryContext:      e.loadMemoryContext(input),
+		MemoryContext:      memoryContext,
+		ToolContexts:       liveEvidence,
 	}
 
 	reply, err := e.generator.Generate(ctx, request)
 	if err != nil {
+		fallback := e.evidenceFallbackReply(input, repoEvidence, liveEvidence)
+		if fallback != "" {
+			return e.attachSources(fallback, append(repoEvidence.Sources, collectToolSources(liveEvidence)...), e.replyLimit(env)), nil
+		}
 		return "", err
 	}
 	reply = strings.TrimSpace(reply)
@@ -328,7 +344,102 @@ func (e Engine) modelReply(ctx context.Context, env gateway.Envelope, input stri
 		chat.Turn{Role: "user", Content: input},
 		chat.Turn{Role: "assistant", Content: reply},
 	)
-	return reply, nil
+	return e.attachSources(reply, append(repoEvidence.Sources, collectToolSources(liveEvidence)...), e.replyLimit(env)), nil
+}
+
+func (e Engine) evidenceFallbackReply(input string, repo repoEvidence, live []chat.ToolContext) string {
+	parts := []string{"The model-backed reply path is unavailable right now, but I found grounded context."}
+	if strings.TrimSpace(repo.Context) != "" {
+		parts = append(parts, "Local repository:")
+		parts = append(parts, trimSnippet(repo.Context, 320))
+	}
+	for _, toolContext := range live {
+		if strings.TrimSpace(toolContext.Result) == "" {
+			continue
+		}
+		parts = append(parts, "Live web:")
+		parts = append(parts, trimSnippet(toolContext.Result, 280))
+		break
+	}
+	if len(parts) == 1 {
+		return ""
+	}
+	parts = append(parts, fmt.Sprintf("Original request: %q", trimSnippet(input, 120)))
+	return strings.Join(parts, "\n")
+}
+
+func (e Engine) loadRepoEvidence(ctx context.Context, input string) (repoEvidence, error) {
+	if e.repoSearch == nil {
+		return repoEvidence{}, nil
+	}
+	return e.repoSearch.Search(ctx, input)
+}
+
+func (e Engine) loadLiveEvidence(ctx context.Context, env gateway.Envelope, input string) ([]chat.ToolContext, error) {
+	if e.liveLookup == nil || !e.allowLiveWebLookup(env) || !shouldUseLiveLookup(input) {
+		return nil, nil
+	}
+	result, err := e.liveLookup.Lookup(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+	if strings.TrimSpace(result.ToolContext.Result) == "" {
+		return nil, nil
+	}
+	return []chat.ToolContext{result.ToolContext}, nil
+}
+
+func (e Engine) allowLiveWebLookup(env gateway.Envelope) bool {
+	if e.rt == nil {
+		return false
+	}
+	if env.Metadata["mode"] == "preview" {
+		return true
+	}
+	cfg := e.rt.Config().Config.Transports.Discord
+	if env.Surface == gateway.SurfaceDiscord {
+		if env.Metadata["dm"] == "true" {
+			return cfg.AllowLiveWebLookupInDMs
+		}
+		return cfg.AllowLiveWebLookupInGuilds
+	}
+	return false
+}
+
+func collectToolSources(toolContexts []chat.ToolContext) []string {
+	sources := make([]string, 0, len(toolContexts))
+	for _, toolContext := range toolContexts {
+		result := strings.TrimSpace(toolContext.Result)
+		if result == "" {
+			continue
+		}
+		firstLine := result
+		if idx := strings.Index(firstLine, "\n"); idx >= 0 {
+			firstLine = firstLine[:idx]
+		}
+		sources = append(sources, firstLine)
+	}
+	return sources
+}
+
+func (e Engine) attachSources(reply string, sources []string, limit int) string {
+	sources = sourceFooters(sources)
+	if len(sources) == 0 {
+		return reply
+	}
+	footerLines := []string{"", "Sources:"}
+	for index, source := range sources {
+		if index >= 4 {
+			break
+		}
+		footerLines = append(footerLines, "- "+source)
+	}
+	footer := strings.Join(footerLines, "\n")
+	combined := strings.TrimSpace(reply) + footer
+	if limit > 0 && len([]rune(combined)) > limit {
+		return strings.TrimSpace(reply)
+	}
+	return combined
 }
 
 // loadMemoryContext infers a subject from the input and returns relevant

@@ -21,6 +21,8 @@ type Config struct {
 	WebUI        WebUIConfig        `json:"webui"`
 	Automation   AutomationConfig   `json:"automation"`
 	Memory       MemoryConfig       `json:"memory"`
+	Knowledge    KnowledgeConfig    `json:"knowledge"`
+	Operator     OperatorConfig     `json:"operator"`
 	Skills       SkillsConfig       `json:"skills"`
 }
 
@@ -114,6 +116,8 @@ type DiscordConfig struct {
 	RespondInDirectMessages   bool     `json:"respondInDirectMessages"`
 	AllowCloudRepliesInGuilds bool     `json:"allowCloudRepliesInGuildChannels"`
 	AllowCloudRepliesInDMs    bool     `json:"allowCloudRepliesInDirectMessages"`
+	AllowLiveWebLookupInGuilds bool    `json:"allowLiveWebLookupInGuildChannels"`
+	AllowLiveWebLookupInDMs    bool    `json:"allowLiveWebLookupInDirectMessages"`
 	UseMessageContentIntent   bool     `json:"useMessageContentIntent"`
 	AllowedChannelIDs         []string `json:"allowedChannelIDs"`
 	PerUserCooldownSeconds    int      `json:"perUserCooldownSeconds"`
@@ -184,6 +188,27 @@ type MemoryConfig struct {
 	SessionIndex string `json:"sessionIndex"`
 }
 
+type KnowledgeConfig struct {
+	CatalogDir              string   `json:"catalogDir"`
+	IndexDir                string   `json:"indexDir"`
+	MaxPacksPerReply        int      `json:"maxPacksPerReply"`
+	MaxExcerptsPerReply     int      `json:"maxExcerptsPerReply"`
+	RequireSourceMetadata   bool     `json:"requireSourceMetadata"`
+	RepoMarkdownDirs        []string `json:"repoMarkdownDirs"`
+	MaxRepoResults          int      `json:"maxRepoResults"`
+	MaxGraphEdges           int      `json:"maxGraphEdges"`
+	EnableLiveWebLookup     bool     `json:"enableLiveWebLookup"`
+	LiveWebProvider         string   `json:"liveWebProvider"`
+	WebLookupTimeoutSeconds int      `json:"webLookupTimeoutSeconds"`
+}
+
+type OperatorConfig struct {
+	ReviewQueueDir             string   `json:"reviewQueueDir"`
+	RunLogDir                  string   `json:"runLogDir"`
+	ApprovedEmails             []string `json:"approvedEmails"`
+	RequireReviewForToolErrors bool     `json:"requireReviewForToolErrors"`
+}
+
 type SkillsConfig struct {
 	WorkspaceDir       string `json:"workspaceDir"`
 	UserDir            string `json:"userDir"`
@@ -209,10 +234,10 @@ func Default() Config {
 		},
 		Models: ModelsConfig{
 			LocalDefault: ModelProfileConfig{
-				Provider:        "mlx",
+				Provider:        "ollama",
 				Profile:         "local-default",
-				Model:           "gemma-4n-e4b",
-				Endpoint:        "http://127.0.0.1:8080",
+				Model:           "gemma4:e4b",
+				Endpoint:        "http://127.0.0.1:11434",
 				UsageMultiplier: 0,
 			},
 			CopilotProfiles: []CopilotLaneConfig{
@@ -225,6 +250,7 @@ func Default() Config {
 			Servers: []MCPServerConfig{
 				{Name: "github", Mode: "remote", Enabled: true},
 				{Name: "context7", Mode: "local", Enabled: true},
+				{Name: "tavily", Mode: "local", Enabled: true},
 				{Name: "playwright", Mode: "local", Enabled: true},
 				{Name: "peekaboo", Mode: "local", Enabled: true},
 			},
@@ -232,9 +258,9 @@ func Default() Config {
 		Integrations: IntegrationsConfig{
 			Ollama: OllamaIntegrationConfig{
 				Enabled:    false,
-				BaseURL:    "https://ollama.com/api",
+				BaseURL:    "https://api.ollama.com",
 				APIKeyEnv:  "OLLAMA_API_KEY",
-				CloudModel: "gpt-oss:120b-cloud",
+				CloudModel: "gemma4:31b-cloud",
 			},
 			GitHub: GitHubIntegrationConfig{
 				Enabled:         false,
@@ -262,6 +288,8 @@ func Default() Config {
 				RespondInDirectMessages:   true,
 				AllowCloudRepliesInGuilds: false,
 				AllowCloudRepliesInDMs:    false,
+				AllowLiveWebLookupInGuilds: false,
+				AllowLiveWebLookupInDMs:    false,
 				UseMessageContentIntent:   false,
 				AllowedChannelIDs:         []string{},
 				PerUserCooldownSeconds:    5,
@@ -306,6 +334,25 @@ func Default() Config {
 			KnowledgeDir: ".savitar/knowledge",
 			SnapshotDir:  ".savitar/snapshots",
 			SessionIndex: ".savitar/session-index.json",
+		},
+		Knowledge: KnowledgeConfig{
+			CatalogDir:              ".savitar/knowledge-catalog",
+			IndexDir:                ".savitar/knowledge-index",
+			MaxPacksPerReply:        3,
+			MaxExcerptsPerReply:     6,
+			RequireSourceMetadata:   true,
+			RepoMarkdownDirs:        []string{"README.md", "docs/adr", "docs/roadmap", "docs/hackathon"},
+			MaxRepoResults:          3,
+			MaxGraphEdges:           6,
+			EnableLiveWebLookup:     true,
+			LiveWebProvider:         "duckduckgo-json",
+			WebLookupTimeoutSeconds: 8,
+		},
+		Operator: OperatorConfig{
+			ReviewQueueDir:             ".savitar/reviews",
+			RunLogDir:                  ".savitar/runs",
+			ApprovedEmails:             []string{},
+			RequireReviewForToolErrors: true,
 		},
 		Skills: SkillsConfig{
 			WorkspaceDir:       ".github/skills",

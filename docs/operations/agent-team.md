@@ -27,6 +27,12 @@ Savitar should be built by a small set of specialized agents rather than one ove
 - `savitar skills` to inspect the current workspace skill catalog.
 - `savitar status` to see whether the workspace and session surface are initialized.
 
+## Internal planning board
+
+- The generated internal planning snapshot lives at `docs/operations/internal-objectives-board.md`.
+- Update `docs/operations/internal-objectives-source.md` when the strategic plan changes.
+- When local git hooks are enabled with `core.hooksPath=scripts/hooks`, commits refresh and stage the generated board automatically.
+
 ## Non-negotiables
 
 - Never hardcode phone numbers, account emails, OAuth credentials, or Apple IDs in version control.

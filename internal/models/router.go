@@ -39,8 +39,8 @@ func DefaultProfiles() []Profile {
 	return []Profile{
 		{
 			Name:            "local-default",
-			Provider:        "mlx",
-			Model:           "gemma-4n-e4b",
+			Provider:        "ollama",
+			Model:           "gemma4:e4b",
 			Purpose:         "Private or latency-sensitive local work on Apple Silicon.",
 			UsageMultiplier: 0,
 		},

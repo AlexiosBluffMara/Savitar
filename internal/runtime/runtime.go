@@ -53,6 +53,8 @@ type DiscordStatus struct {
 	RespondInDirectMessages   bool
 	AllowCloudRepliesInGuilds bool
 	AllowCloudRepliesInDMs    bool
+	AllowLiveWebLookupInGuilds bool
+	AllowLiveWebLookupInDMs    bool
 	UseMessageContentIntent   bool
 	AllowedChannelIDs         []string
 	PerUserCooldownSeconds    int
@@ -171,6 +173,8 @@ func (r *Runtime) DiscordStatus() DiscordStatus {
 		RespondInDirectMessages:   cfg.RespondInDirectMessages,
 		AllowCloudRepliesInGuilds: cfg.AllowCloudRepliesInGuilds,
 		AllowCloudRepliesInDMs:    cfg.AllowCloudRepliesInDMs,
+		AllowLiveWebLookupInGuilds: cfg.AllowLiveWebLookupInGuilds,
+		AllowLiveWebLookupInDMs:    cfg.AllowLiveWebLookupInDMs,
 		UseMessageContentIntent:   cfg.UseMessageContentIntent,
 		AllowedChannelIDs:         append([]string(nil), cfg.AllowedChannelIDs...),
 		PerUserCooldownSeconds:    cfg.PerUserCooldownSeconds,
@@ -369,6 +373,13 @@ func (r *Runtime) MemoryList() ([]memory.PackMeta, error) {
 	return r.memStore.ListAll()
 }
 
+// RepoMarkdownSearch searches markdown files in the local repository and
+// returns ranked excerpts plus a lightweight document graph for LLM context.
+func (r *Runtime) RepoMarkdownSearch(query string) (memory.MarkdownSearchResult, error) {
+	cfg := r.loaded.Config.Knowledge
+	return memory.SearchRepoMarkdown(r.rootDir, cfg.RepoMarkdownDirs, query, cfg.MaxRepoResults, cfg.MaxGraphEdges)
+}
+
 // SessionList returns summaries for all session files.
 func (r *Runtime) SessionList() ([]session.Summary, error) {
 	return session.NewStore(r.resolvePath(r.loaded.Config.Memory.SessionIndex)).List()
@@ -376,11 +387,11 @@ func (r *Runtime) SessionList() ([]session.Summary, error) {
 
 func (r *Runtime) Plan() []string {
 	return []string{
-		"Finish workstation setup and verify the MCP stack on the Mac Mini.",
-		"Implement the core agent loop, session state, persona policy, and model router.",
-		"Add MCP orchestration, hooks, skill loading, screen capture, and controlled browser automation.",
-		"Build Discord, WhatsApp, iMessage, remote-host control, and the initial public web UI behind explicit contracts.",
-		"Add durable memory packs, repository analysis, and operator-facing deployment surfaces with auth hardening.",
+		"Lock the product to Discord, curated knowledge, evidence-backed replies, and one authenticated operator console.",
+		"Build the orchestration program that turns an inbound envelope into a route, evidence set, reply draft, run record, and delivery plan.",
+		"Implement retrieval, citations, session continuity, and durable run records before adding more public surfaces.",
+		"Replace the direct Discord reply path with the orchestrator and expose operator review state through backend services.",
+		"Ship the authenticated operator web UI, then expand to later transports and automation only after the core workflow is coherent.",
 	}
 }
 

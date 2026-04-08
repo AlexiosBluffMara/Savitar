@@ -15,6 +15,7 @@ What works right now:
 - Workspace agent and skill discovery from `.github/agents` and `.github/skills`.
 - Provider integration checks for Ollama, GitHub, Hugging Face, and Kaggle via keychain-backed credentials.
 - A working Discord bot surface: mention-or-DM filtering, Ollama-backed conversational replies, per-user cooldown, concurrency caps, operator allowlist enforcement, and rolling in-memory chat history.
+- The preview reply path, and Discord when locally opted in, can now enrich a turn with local repository markdown evidence plus one live web lookup, and degrade to a grounded evidence summary when the local model is unavailable.
 
 What does not work yet:
 
@@ -79,6 +80,8 @@ See `docs/roadmap/0001-phase-plan.md` and `docs/roadmap/0002-parity-targets.md` 
 - `savitar gateway` summarizes Discord, WhatsApp, iMessage, and web UI surface status.
 - `savitar persona` prints the current Savitar voice policy.
 - `savitar session [show|init]` inspects or initializes local session state.
+- `savitar memory search <query>` ranks local repository markdown excerpts for a query.
+- `savitar memory graph <query>` prints the compact document-and-link graph around the top markdown hits.
 - `savitar discord [status|preview|run]` inspects, previews, or starts the Discord bot transport, including the model-backed reply path for normal messages.
 
 ## Project map

@@ -99,7 +99,7 @@ func printHelp(out io.Writer) {
 	fmt.Fprintln(out, "  savitar discord [status|preview|run]")
 	fmt.Fprintln(out, "  savitar mcp [status]")
 	fmt.Fprintln(out, "  savitar repo analyze <url>")
-	fmt.Fprintln(out, "  savitar memory [list|show <name>]")
+	fmt.Fprintln(out, "  savitar memory [list|show <subject> <name>|write <subject> <name> <body>|search <query>|graph <query>]")
 	fmt.Fprintln(out, "  savitar plan")
 	fmt.Fprintln(out, "  savitar contracts")
 	fmt.Fprintln(out, "  savitar models")
@@ -335,6 +335,8 @@ func printDiscordStatus(out io.Writer, rt *savitarruntime.Runtime) {
 	fmt.Fprintf(tw, "trigger mode\t%s\n", status.TriggerMode)
 	fmt.Fprintf(tw, "cloud guild channels\t%t\n", status.AllowCloudRepliesInGuilds)
 	fmt.Fprintf(tw, "cloud DMs\t%t\n", status.AllowCloudRepliesInDMs)
+	fmt.Fprintf(tw, "live web guild channels\t%t\n", status.AllowLiveWebLookupInGuilds)
+	fmt.Fprintf(tw, "live web DMs\t%t\n", status.AllowLiveWebLookupInDMs)
 	fmt.Fprintf(tw, "message content intent\t%t\n", status.UseMessageContentIntent)
 	fmt.Fprintf(tw, "allowed channels\t%s\n", blankIfEmpty(strings.Join(status.AllowedChannelIDs, ", ")))
 	fmt.Fprintf(tw, "per-user cooldown\t%ds\n", status.PerUserCooldownSeconds)
@@ -356,8 +358,14 @@ func printDiscordStatus(out io.Writer, rt *savitarruntime.Runtime) {
 	if status.RespondInDirectMessages && !status.AllowCloudRepliesInDMs {
 		fmt.Fprintln(out, "note: direct messages fail closed unless a local Ollama target is configured")
 	}
+	if status.RespondInDirectMessages && !status.AllowLiveWebLookupInDMs {
+		fmt.Fprintln(out, "note: direct-message live web lookup is disabled unless explicitly opted in locally")
+	}
 	if !status.AllowCloudRepliesInGuilds {
 		fmt.Fprintln(out, "note: guild messages fail closed unless a local Ollama target is configured")
+	}
+	if !status.AllowLiveWebLookupInGuilds {
+		fmt.Fprintln(out, "note: guild live web lookup is disabled unless explicitly opted in locally")
 	}
 }
 
@@ -614,9 +622,46 @@ func handleMemory(out io.Writer, errOut io.Writer, rt *savitarruntime.Runtime, a
 		}
 		fmt.Fprintf(out, "wrote pack %q to subject %q\n", pack.Name, pack.Subject)
 		return 0
+	case "search":
+		if len(args) < 2 {
+			fmt.Fprintln(errOut, "usage: savitar memory search <query>")
+			return 1
+		}
+		result, err := rt.RepoMarkdownSearch(strings.Join(args[1:], " "))
+		if err != nil {
+			fmt.Fprintf(errOut, "failed to search repo markdown: %v\n", err)
+			return 1
+		}
+		if len(result.Results) == 0 {
+			fmt.Fprintln(out, "no repo markdown results found")
+			return 0
+		}
+		for _, match := range result.Results {
+			fmt.Fprintf(out, "%s\n", match.SourceLabel())
+			fmt.Fprintf(out, "score: %d\n", match.Score)
+			fmt.Fprintf(out, "%s\n\n", match.Snippet)
+		}
+		return 0
+	case "graph":
+		if len(args) < 2 {
+			fmt.Fprintln(errOut, "usage: savitar memory graph <query>")
+			return 1
+		}
+		result, err := rt.RepoMarkdownSearch(strings.Join(args[1:], " "))
+		if err != nil {
+			fmt.Fprintf(errOut, "failed to build repo markdown graph: %v\n", err)
+			return 1
+		}
+		graph := result.GraphString()
+		if graph == "" {
+			fmt.Fprintln(out, "no repo markdown graph found")
+			return 0
+		}
+		fmt.Fprintln(out, graph)
+		return 0
 	default:
 		fmt.Fprintf(errOut, "unknown memory action %q\n", action)
-		fmt.Fprintln(errOut, "usage: savitar memory [list|show <subject> <name>|write <subject> <name> <body>]")
+		fmt.Fprintln(errOut, "usage: savitar memory [list|show <subject> <name>|write <subject> <name> <body>|search <query>|graph <query>]")
 		return 1
 	}
 }

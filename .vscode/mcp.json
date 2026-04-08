@@ -1,43 +1,71 @@
 {
-  "inputs": [
-    {
-      "type": "promptString",
-      "id": "context7_api_key",
-      "description": "Optional Context7 API key for higher rate limits",
-      "password": true
-    }
-  ],
-  "servers": {
-    "github": {
-      "type": "http",
-      "url": "https://api.githubcopilot.com/mcp/"
-    },
-    "context7": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@upstash/context7-mcp"
-      ],
-      "env": {
-        "CONTEXT7_API_KEY": "${input:context7_api_key}"
-      },
-      "sandboxEnabled": true
-    },
-    "playwright": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@playwright/mcp@latest",
-        "--headless"
-      ],
-      "sandboxEnabled": true
-    },
-    "peekaboo": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@steipete/peekaboo"
-      ]
-    }
-  }
+	"inputs": [
+		{
+			"type": "promptString",
+			"id": "context7_api_key",
+			"description": "Optional Context7 API key for higher rate limits",
+			"password": true
+		},
+		{
+			"type": "promptString",
+			"id": "tavily_api_key",
+			"description": "Tavily API key for web search",
+			"password": true
+		}
+	],
+	"sandbox": {
+		"network": {
+			"allowedDomains": [
+				"api.tavily.com"
+			]
+		}
+	},
+	"servers": {
+		"github": {
+			"type": "http",
+			"url": "https://api.githubcopilot.com/mcp/"
+		},
+		"context7": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@upstash/context7-mcp"
+			],
+			"env": {
+				"CONTEXT7_API_KEY": "${input:context7_api_key}"
+			},
+			"sandboxEnabled": true,
+			"type": "stdio"
+		},
+		"tavily": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"tavily-mcp@latest"
+			],
+			"env": {
+				"TAVILY_API_KEY": "${input:tavily_api_key}"
+			},
+			"sandboxEnabled": true,
+			"type": "stdio"
+		},
+		"playwright": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@playwright/mcp@latest",
+				"--headless"
+			],
+			"sandboxEnabled": true,
+			"type": "stdio"
+		},
+		"peekaboo": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@steipete/peekaboo"
+			],
+			"type": "stdio"
+		}
+	}
 }

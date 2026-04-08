@@ -1,5 +1,9 @@
 # Phase Plan
 
+This file is the legacy broad-scope phase map.
+
+The active rewrite direction is defined in [docs/adr/0006-rewrite-product-direction.md](../adr/0006-rewrite-product-direction.md) and [docs/roadmap/0006-rewrite-blueprint.md](0006-rewrite-blueprint.md). Use those files when planning the narrowed product around Discord, knowledge retrieval, and the operator console.
+
 ## Phase 0: Foundation
 
 - Clean-room charter and provenance process
@@ -61,4 +65,7 @@
 - release process
 - launchd service packaging
 - Mac Mini rollout checklist
-- native companion planning for an eventual Pixel Fold app surface
+- Pixel 9 Pro Fold mobile operator dashboard (responsive web UI)
+- Google Fi as WhatsApp Business carrier number
+- Gemma 4 E2B on-device inference via LiteRT on Tensor G4 (exploratory)
+- Apple Education procurement documentation for school deployments

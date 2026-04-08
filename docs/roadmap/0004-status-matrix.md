@@ -1,5 +1,9 @@
 # Product Status Matrix
 
+This matrix reflects the broader pre-rewrite surface map.
+
+For the narrowed rewrite target, use [docs/adr/0006-rewrite-product-direction.md](../adr/0006-rewrite-product-direction.md) and [docs/roadmap/0006-rewrite-blueprint.md](0006-rewrite-blueprint.md) as the current planning source of truth.
+
 This matrix reflects actual shipped capability versus roadmap intent as of the current binary and repo state. It is meant to stay honest and be updated as features ship.
 
 Status key:
@@ -127,6 +131,9 @@ Status key:
 | Public web UI backend | Not started | Contract defined (phase-3) |
 | Google OAuth session validation | Not started | |
 | Operator dashboard | Not started | |
+| Responsive mobile layout (Pixel Fold) | Not started | 8" inner display as primary mobile surface |
+| Budget calculator page | Not started | Interactive tier selector with Apple Education pricing |
+| Demo read-only mode | Not started | Public URL for hackathon judges |
 
 ---
 
@@ -134,11 +141,39 @@ Status key:
 
 | Feature | Status | Notes |
 | --- | --- | --- |
-| Durable memory pack files | Not started | Contract defined (phase-4) |
+| Durable memory pack files | Partial | Pack struct + Store exist; filesystem packs created at ~/.savitar/memory/ |
 | Subject-area indexed summaries | Not started | |
 | Retrieval layer | Not started | |
 | Cross-session context | Not started | |
 | Session store (in-process) | Partial | Store struct exists; not persisted to disk |
+| Hackathon memory packs | Shipped | Grant programs, ISU, Chicago small biz at ~/.savitar/memory/ |
+
+---
+
+## Mobile companion (Pixel 9 Pro Fold)
+
+| Feature | Status | Notes |
+| --- | --- | --- |
+| Mobile operator dashboard via web UI | Not started | Responsive layout for 8" Fold inner display |
+| Google Fi WhatsApp Business endpoint | Not started | Fi number as WhatsApp transport |
+| Gemma 4 E2B on-device (LiteRT) | Not started | Phase-6+ goal; architecture documents the path |
+| Android companion app | Not started | Future; web UI in Chrome is the initial mobile surface |
+
+---
+
+## Hackathon deliverables (Gemma 4 Good)
+
+| Deliverable | Status | Deadline | Notes |
+| --- | --- | --- | --- |
+| Strategy docs (submission, budget, community, ecosystem) | Shipped | Apr 7 | 7+ docs in docs/hackathon/ |
+| Memory packs (grants, ISU, Chicago) | Shipped | Apr 7 | 6 packs at ~/.savitar/memory/ |
+| MCP runtime client (Milestone 1) | Not started | Apr 13 | Required for tool use in demos |
+| Web UI v0 (operator dashboard) | Not started | Apr 13 | Needed for live demo |
+| iMessage bridge prototype | Not started | Apr 20 | Contract defined |
+| Pixel Fold mobile dashboard | Not started | Apr 27 | Responsive web UI |
+| Google Fi WhatsApp setup | Not started | May 4 | Fi number as WhatsApp Business |
+| Demo video recording | Not started | May 11 | 5-minute walkthrough |
+| Kaggle notebook/submission | Not started | May 18 | Final deadline |
 
 ---
 

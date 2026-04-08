@@ -1,0 +1,31 @@
+# Provenance Entry
+
+- Workstream: Local markdown-first repository retrieval, graph context generation, and live web lookup in the Discord reply path
+- Date: 2026-04-08
+- Author: GitHub Copilot
+- External systems or docs consulted:
+  - https://github.com/karpathy/reader3
+  - https://github.com/karpathy/rendergit
+  - https://api.duckduckgo.com/ instant-answer JSON endpoint behavior
+  - https://en.wikipedia.org/w/api.php OpenSearch API behavior
+- Public interfaces or behaviors captured:
+  - Karpathy's public markdown/plaintext-first pattern: preserve document structure, flatten content into LLM-friendly text, and rely on hierarchy before adding embeddings
+  - Rendered or flattened repository views as an LLM-readable representation
+  - Zero-auth live lookup through simple public JSON endpoints for prototype internet evidence
+- Explicit non-goals or material not copied:
+  - No code, prompts, tests, or internal data structures were copied from Karpathy repositories
+  - No vector database, embedding model, or external hosted search backend was adopted in this pass
+  - No code was copied from DuckDuckGo or Wikipedia clients
+- New files or modules created from scratch:
+  - internal/memory/markdown_repo.go
+  - internal/memory/markdown_repo_test.go
+  - internal/respond/evidence.go
+  - internal/respond/evidence_test.go
+- Verification completed:
+  - go test ./internal/memory ./internal/respond ./internal/runtime ./internal/app ./internal/config
+  - go run ./cmd/savitar memory search "rewrite operator console"
+  - go run ./cmd/savitar memory graph "rewrite operator console"
+  - go run ./cmd/savitar discord preview "Who is Andrej Karpathy and how does the rewrite work?"
+- Follow-up provenance needed:
+  - MCP-backed live search once Tavily, Context7, or GitHub runtime tool use replaces or augments the direct web fallback
+  - Operator web console implementation for review, run history, and evidence inspection

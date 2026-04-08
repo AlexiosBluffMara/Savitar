@@ -49,6 +49,14 @@ func TestLoadReturnsDefaultsWhenFileMissing(t *testing.T) {
 		t.Fatal("expected Discord cloud guild replies to be disabled by default")
 	}
 
+	if loaded.Config.Transports.Discord.AllowLiveWebLookupInDMs {
+		t.Fatal("expected Discord live web lookup in DMs to be disabled by default")
+	}
+
+	if loaded.Config.Transports.Discord.AllowLiveWebLookupInGuilds {
+		t.Fatal("expected Discord live web lookup in guilds to be disabled by default")
+	}
+
 	if len(loaded.Config.Transports.Discord.OperatorUserIDs) != 0 {
 		t.Fatalf("expected default Discord operator user allowlist to be empty, got %d entries", len(loaded.Config.Transports.Discord.OperatorUserIDs))
 	}
@@ -59,6 +67,26 @@ func TestLoadReturnsDefaultsWhenFileMissing(t *testing.T) {
 
 	if loaded.Config.Integrations.Kaggle.TokenEnv != "KAGGLE_API_TOKEN" {
 		t.Fatalf("unexpected default Kaggle token env: %q", loaded.Config.Integrations.Kaggle.TokenEnv)
+	}
+
+	if !loaded.Config.Knowledge.RequireSourceMetadata {
+		t.Fatal("expected knowledge retrieval to require source metadata by default")
+	}
+
+	if loaded.Config.Operator.RunLogDir != ".savitar/runs" {
+		t.Fatalf("unexpected default operator run log dir: %q", loaded.Config.Operator.RunLogDir)
+	}
+
+	if len(loaded.Config.Knowledge.RepoMarkdownDirs) != 4 {
+		t.Fatalf("expected default repo markdown dirs, got %d entries", len(loaded.Config.Knowledge.RepoMarkdownDirs))
+	}
+
+	if !loaded.Config.Knowledge.EnableLiveWebLookup {
+		t.Fatal("expected live web lookup to be enabled by default")
+	}
+
+	if loaded.Config.Knowledge.LiveWebProvider != "duckduckgo-json" {
+		t.Fatalf("unexpected live web provider: %q", loaded.Config.Knowledge.LiveWebProvider)
 	}
 }
 
@@ -86,7 +114,7 @@ func TestLoadOverridesDefaultsFromFile(t *testing.T) {
 		t.Fatal("expected AllowShellExecution to be overridden to false")
 	}
 
-	if loaded.Config.Models.LocalDefault.Model != "gemma-4n-e4b" {
+	if loaded.Config.Models.LocalDefault.Model != "gemma4:e4b" {
 		t.Fatalf("expected default model to remain populated, got %q", loaded.Config.Models.LocalDefault.Model)
 	}
 
